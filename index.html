@@ -1,0 +1,4721 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="description" content="SAZ Bridge — Cloudflare Worker Subscription Manager · Full Documentation"/>
+<meta name="theme-color" content="#0054E3"/>
+<meta property="og:title" content="SAZ Bridge — Documentation"/>
+<meta property="og:description" content="Complete documentation for SAZ Bridge v0.0.7"/>
+<meta property="og:image" content="https://github.com/THE-SAZ.png"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230054E3'/><text x='50' y='72' font-size='60' text-anchor='middle' fill='white' font-family='Tahoma'>🌉</text></svg>"/>
+<title>SAZ Bridge 🌉 — Documentation</title>
+
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   SAZ Bridge Documentation — Complete Stylesheet
+   ═══════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  /* XP Colors */
+  --xp-blue-1:#0058E6;
+  --xp-blue-2:#3A93FF;
+  --xp-blue-3:#0054E3;
+  --xp-blue-4:#0046CA;
+  --xp-blue-5:#003DB8;
+  --xp-green-1:#B6E664;
+  --xp-green-2:#7FBA00;
+  --xp-green-3:#4C8B00;
+  --xp-silver:#ECE9D8;
+  --xp-silver-l:#FAF9F5;
+  --xp-silver-d:#D5D2CA;
+  --xp-border:#003C74;
+
+  /* Dark theme */
+  --bg:#0a0e1a;
+  --bg-2:#0f1421;
+  --bg-3:#151b2b;
+  --card:#141a2a;
+  --card-2:#1a2234;
+  --bd:rgba(255,255,255,.07);
+  --bd-2:rgba(255,255,255,.12);
+
+  /* Text */
+  --tx:#e8edf5;
+  --tx-2:#8892a4;
+  --tx-3:#5a6578;
+
+  /* Accent */
+  --ac:#3A93FF;
+  --ac-2:#0054E3;
+  --ac-3:#7FBA00;
+  --ac-glow:rgba(58,147,255,.35);
+
+  /* States */
+  --ok:#22c55e;
+  --warn:#f59e0b;
+  --err:#ef4444;
+  --info:#3b82f6;
+
+  /* Layout */
+  --nav-h:64px;
+  --sidebar-w:280px;
+  --radius:14px;
+  --radius-sm:10px;
+
+  /* Fonts */
+  --font: 'Vazirmatn','Inter',system-ui,-apple-system,Tahoma,sans-serif;
+  --font-mono: 'JetBrains Mono','Consolas','Courier New',monospace;
+}
+
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--tx);
+  line-height:1.75;
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+body[dir="ltr"]{font-family:'Inter','Vazirmatn',system-ui,sans-serif}
+
+/* Animated ambient background */
+body::before{
+  content:'';position:fixed;inset:-50%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(circle at 15% 25%,rgba(58,147,255,.10) 0%,transparent 45%),
+    radial-gradient(circle at 85% 75%,rgba(127,186,0,.08) 0%,transparent 45%),
+    radial-gradient(circle at 50% 50%,rgba(0,84,227,.05) 0%,transparent 60%);
+  animation:bgFloat 30s ease-in-out infinite;
+}
+@keyframes bgFloat{
+  0%,100%{transform:translate(0,0) rotate(0)}
+  33%{transform:translate(2%,-2%) rotate(1.5deg)}
+  66%{transform:translate(-2%,1%) rotate(-1deg)}
+}
+
+/* Scrollbar */
+::-webkit-scrollbar{width:12px;height:12px}
+::-webkit-scrollbar-track{background:var(--bg-2)}
+::-webkit-scrollbar-thumb{background:linear-gradient(to bottom,var(--ac-2),var(--ac));border-radius:6px;border:3px solid var(--bg-2)}
+::-webkit-scrollbar-thumb:hover{background:linear-gradient(to bottom,var(--ac),#60a5fa)}
+
+a{color:var(--ac);text-decoration:none;transition:color .2s}
+a:hover{color:#60a5fa}
+
+code{
+  font-family:var(--font-mono);
+  font-size:.88em;
+  background:rgba(58,147,255,.12);
+  color:#93c5fd;
+  padding:2px 6px;
+  border-radius:4px;
+  border:1px solid rgba(58,147,255,.2);
+  direction:ltr;
+  display:inline-block;
+}
+pre{
+  background:var(--bg-2);
+  border:1px solid var(--bd);
+  border-radius:var(--radius-sm);
+  padding:16px 18px;
+  overflow-x:auto;
+  direction:ltr;
+  text-align:left;
+  margin:12px 0;
+  position:relative;
+  font-size:13px;
+  line-height:1.7;
+}
+pre code{
+  background:none;
+  border:none;
+  padding:0;
+  color:#e8edf5;
+  font-size:13px;
+  display:block;
+}
+pre::before{
+  content:attr(data-lang);
+  position:absolute;
+  top:6px;right:10px;
+  font-size:9px;
+  color:var(--tx-3);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  font-family:var(--font-mono);
+  background:rgba(0,0,0,.3);
+  padding:2px 8px;
+  border-radius:4px;
+}
+pre::-webkit-scrollbar{height:8px}
+
+/* ═══════════════════════════════════════
+   TOP NAVIGATION
+   ═══════════════════════════════════════ */
+.nav{
+  position:sticky;
+  top:0;
+  z-index:100;
+  height:var(--nav-h);
+  background:rgba(10,14,26,.85);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bd);
+  display:flex;
+  align-items:center;
+  padding:0 24px;
+  gap:16px;
+}
+.nav::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--ac),var(--ac-3),var(--ac),transparent);
+  animation:shine 6s linear infinite;
+}
+@keyframes shine{
+  0%{background-position:-200% 0}
+  100%{background-position:200% 0}
+}
+.nav-logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-shrink:0;
+}
+.nav-logo svg{
+  width:38px;height:38px;
+  filter:drop-shadow(0 4px 12px var(--ac-glow));
+  transition:transform .3s;
+}
+.nav-logo:hover svg{transform:rotate(-6deg) scale(1.05)}
+.nav-brand{
+  display:flex;
+  flex-direction:column;
+  line-height:1.15;
+}
+.nav-brand .name{
+  font-size:15px;
+  font-weight:900;
+  color:var(--tx);
+  letter-spacing:-.3px;
+}
+.nav-brand .ver{
+  font-size:10px;
+  color:var(--ac);
+  font-weight:700;
+  letter-spacing:1px;
+}
+.nav-menu{
+  display:flex;
+  gap:4px;
+  flex:1;
+  justify-content:center;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.nav-menu::-webkit-scrollbar{display:none}
+.nav-menu a{
+  padding:8px 14px;
+  color:var(--tx-2);
+  font-size:13px;
+  font-weight:600;
+  border-radius:8px;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.nav-menu a:hover{
+  color:var(--tx);
+  background:var(--card-2);
+}
+.nav-menu a.active{
+  color:var(--ac);
+  background:rgba(58,147,255,.12);
+}
+.nav-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  flex-shrink:0;
+}
+
+/* Language switcher */
+.lang-switch{
+  position:relative;
+}
+.lang-btn{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:8px 12px;
+  background:var(--card-2);
+  border:1px solid var(--bd);
+  border-radius:8px;
+  color:var(--tx-2);
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s;
+  font-family:inherit;
+}
+.lang-btn:hover{border-color:var(--ac);color:var(--tx)}
+.lang-flag{font-size:14px;line-height:1}
+.lang-menu{
+  position:absolute;
+  top:calc(100% + 8px);
+  inset-inline-end:0;
+  background:var(--card);
+  border:1px solid var(--bd-2);
+  border-radius:12px;
+  padding:6px;
+  min-width:170px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(-6px);
+  transition:all .25s;
+  z-index:200;
+}
+.lang-menu.open{
+  opacity:1;
+  visibility:visible;
+  transform:translateY(0);
+}
+.lang-menu button{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  padding:9px 12px;
+  background:transparent;
+  border:none;
+  border-radius:8px;
+  color:var(--tx-2);
+  font-family:inherit;
+  font-size:13px;
+  font-weight:600;
+  cursor:pointer;
+  text-align:start;
+  transition:all .15s;
+}
+.lang-menu button:hover{
+  background:var(--card-2);
+  color:var(--tx);
+}
+.lang-menu button.active{
+  background:rgba(58,147,255,.12);
+  color:var(--ac);
+}
+.lang-menu button .flag{font-size:16px}
+.lang-menu button .name{flex:1}
+
+.nav-hamburger{
+  display:none;
+  width:40px;height:40px;
+  background:var(--card-2);
+  border:1px solid var(--bd);
+  border-radius:8px;
+  color:var(--tx);
+  font-size:18px;
+  cursor:pointer;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ═══════════════════════════════════════
+   HERO
+   ═══════════════════════════════════════ */
+.hero{
+  padding:80px 24px 60px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.hero-inner{max-width:900px;margin:0 auto;position:relative;z-index:2}
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background:rgba(58,147,255,.12);
+  border:1px solid rgba(58,147,255,.25);
+  color:#93c5fd;
+  font-size:11px;
+  font-weight:700;
+  padding:6px 16px;
+  border-radius:24px;
+  margin-bottom:22px;
+  letter-spacing:1px;
+  animation:fadeInDown .6s ease;
+}
+.hero-badge .dot{
+  width:7px;height:7px;
+  background:var(--ac-3);
+  border-radius:50%;
+  box-shadow:0 0 8px var(--ac-3);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.4;transform:scale(.85)}
+}
+@keyframes fadeInDown{
+  from{opacity:0;transform:translateY(-12px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.hero-title{
+  font-size:clamp(32px,6vw,68px);
+  font-weight:900;
+  line-height:1.1;
+  letter-spacing:-1.5px;
+  margin-bottom:16px;
+  background:linear-gradient(135deg,#fff 0%,#3A93FF 50%,#7FBA00 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:fadeInUp .7s .1s both;
+}
+@keyframes fadeInUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.hero-sub{
+  font-size:clamp(14px,2vw,19px);
+  color:var(--tx-2);
+  max-width:660px;
+  margin:0 auto 32px;
+  line-height:1.8;
+  animation:fadeInUp .7s .2s both;
+}
+.hero-actions{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+  animation:fadeInUp .7s .3s both;
+}
+.btn{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:13px 26px;
+  border-radius:12px;
+  font-family:inherit;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  border:1px solid transparent;
+  transition:all .25s cubic-bezier(.16,1,.3,1);
+  text-decoration:none;
+  white-space:nowrap;
+}
+.btn-primary{
+  background:linear-gradient(135deg,var(--ac-2),var(--ac));
+  color:#fff;
+  box-shadow:0 6px 20px rgba(58,147,255,.35);
+}
+.btn-primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 35px rgba(58,147,255,.5);
+  color:#fff;
+}
+.btn-ghost{
+  background:var(--card-2);
+  color:var(--tx);
+  border-color:var(--bd-2);
+}
+.btn-ghost:hover{
+  border-color:var(--ac);
+  transform:translateY(-3px);
+  color:var(--tx);
+}
+.btn-green{
+  background:linear-gradient(135deg,#4C8B00,var(--ac-3));
+  color:#fff;
+  box-shadow:0 6px 20px rgba(127,186,0,.3);
+}
+.btn-green:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 35px rgba(127,186,0,.45);
+  color:#fff;
+}
+
+.hero-stats{
+  display:flex;
+  gap:32px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-top:44px;
+  animation:fadeInUp .7s .5s both;
+}
+.hero-stat{
+  text-align:center;
+}
+.hero-stat .num{
+  font-size:28px;
+  font-weight:900;
+  color:var(--ac);
+  letter-spacing:-1px;
+}
+.hero-stat .lbl{
+  font-size:11px;
+  color:var(--tx-3);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  font-weight:700;
+  margin-top:2px;
+}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+   ═══════════════════════════════════════ */
+.layout{
+  display:grid;
+  grid-template-columns:var(--sidebar-w) 1fr;
+  max-width:1440px;
+  margin:0 auto;
+  padding:0 24px;
+  gap:32px;
+  align-items:start;
+}
+
+/* Sidebar */
+.sidebar{
+  position:sticky;
+  top:calc(var(--nav-h) + 16px);
+  max-height:calc(100vh - var(--nav-h) - 32px);
+  overflow-y:auto;
+  padding:20px 0;
+  scrollbar-width:thin;
+}
+.sidebar::-webkit-scrollbar{width:6px}
+.sidebar-title{
+  font-size:10px;
+  color:var(--tx-3);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  padding:12px 14px 6px;
+}
+.sidebar-link{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 14px;
+  color:var(--tx-2);
+  font-size:13px;
+  font-weight:600;
+  border-radius:8px;
+  transition:all .15s;
+  border-inline-start:2px solid transparent;
+  margin:1px 0;
+}
+.sidebar-link:hover{
+  color:var(--tx);
+  background:var(--card-2);
+  border-inline-start-color:var(--ac);
+}
+.sidebar-link.active{
+  color:var(--ac);
+  background:rgba(58,147,255,.1);
+  border-inline-start-color:var(--ac);
+}
+.sidebar-link .ico{
+  width:22px;height:22px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  flex-shrink:0;
+}
+
+/* Content */
+.content{
+  min-width:0;
+  padding:24px 0 100px;
+}
+.section{
+  margin-bottom:64px;
+  scroll-margin-top:80px;
+  animation:fadeInUp .5s both;
+}
+.section-header{
+  margin-bottom:24px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--bd);
+  position:relative;
+}
+.section-header::after{
+  content:'';
+  position:absolute;
+  bottom:-1px;
+  inset-inline-start:0;
+  width:80px;
+  height:3px;
+  background:linear-gradient(90deg,var(--ac),var(--ac-3));
+  border-radius:3px;
+}
+.section-eyebrow{
+  font-size:11px;
+  color:var(--ac);
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  margin-bottom:6px;
+}
+.section-title{
+  font-size:clamp(22px,3.5vw,34px);
+  font-weight:900;
+  letter-spacing:-.8px;
+  line-height:1.2;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.section-title .icon{
+  font-size:1.1em;
+}
+.section-desc{
+  font-size:15px;
+  color:var(--tx-2);
+  margin-top:10px;
+  line-height:1.85;
+}
+
+/* Prose */
+.prose p{
+  margin-bottom:14px;
+  font-size:15px;
+  color:var(--tx-2);
+  line-height:1.9;
+}
+.prose h3{
+  font-size:19px;
+  font-weight:800;
+  color:var(--tx);
+  margin:26px 0 12px;
+  letter-spacing:-.3px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.prose h4{
+  font-size:16px;
+  font-weight:700;
+  color:var(--tx);
+  margin:20px 0 10px;
+}
+.prose ul, .prose ol{
+  margin:12px 0 16px;
+  padding-inline-start:22px;
+}
+.prose li{
+  font-size:14.5px;
+  color:var(--tx-2);
+  line-height:1.85;
+  margin-bottom:6px;
+}
+.prose li::marker{color:var(--ac)}
+.prose strong{color:var(--tx);font-weight:700}
+
+/* Cards & Grids */
+.grid{
+  display:grid;
+  gap:16px;
+  margin:20px 0;
+}
+.grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.grid-3{grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.grid-4{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:var(--radius);
+  padding:20px;
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:linear-gradient(90deg,transparent,var(--ac),transparent);
+  opacity:0;
+  transition:opacity .3s;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:var(--bd-2);
+  box-shadow:0 20px 50px rgba(0,0,0,.4);
+}
+.card:hover::before{opacity:1}
+.card-icon{
+  font-size:28px;
+  margin-bottom:10px;
+  display:block;
+}
+.card-title{
+  font-size:15px;
+  font-weight:800;
+  color:var(--tx);
+  margin-bottom:6px;
+  letter-spacing:-.2px;
+}
+.card-desc{
+  font-size:13px;
+  color:var(--tx-2);
+  line-height:1.7;
+}
+
+/* Feature card */
+.feature{
+  display:flex;
+  gap:14px;
+  padding:18px;
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:var(--radius);
+  transition:all .3s;
+  align-items:flex-start;
+}
+.feature:hover{
+  border-color:var(--ac);
+  transform:translateX(-4px);
+  background:var(--card-2);
+}
+body[dir="ltr"] .feature:hover{transform:translateX(4px)}
+.feature-icon{
+  width:44px;height:44px;
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(58,147,255,.15),rgba(127,186,0,.15));
+  border:1px solid rgba(58,147,255,.2);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+.feature-body{min-width:0;flex:1}
+.feature-title{
+  font-size:14px;
+  font-weight:800;
+  color:var(--tx);
+  margin-bottom:3px;
+}
+.feature-desc{
+  font-size:13px;
+  color:var(--tx-2);
+  line-height:1.7;
+}
+
+/* Callouts */
+.callout{
+  display:flex;
+  gap:12px;
+  padding:16px 18px;
+  border-radius:var(--radius-sm);
+  border:1px solid;
+  margin:16px 0;
+  font-size:14px;
+  line-height:1.75;
+  align-items:flex-start;
+}
+.callout .ci{
+  font-size:20px;
+  line-height:1.2;
+  flex-shrink:0;
+}
+.callout .cb{flex:1;min-width:0}
+.callout .cb strong{display:block;margin-bottom:3px;font-weight:800}
+.callout-info{
+  background:rgba(59,130,246,.08);
+  border-color:rgba(59,130,246,.25);
+  color:#bfdbfe;
+}
+.callout-info strong{color:#dbeafe}
+.callout-warn{
+  background:rgba(245,158,11,.08);
+  border-color:rgba(245,158,11,.25);
+  color:#fde68a;
+}
+.callout-warn strong{color:#fef3c7}
+.callout-ok{
+  background:rgba(34,197,94,.08);
+  border-color:rgba(34,197,94,.25);
+  color:#bbf7d0;
+}
+.callout-ok strong{color:#dcfce7}
+.callout-err{
+  background:rgba(239,68,68,.08);
+  border-color:rgba(239,68,68,.25);
+  color:#fecaca;
+}
+.callout-err strong{color:#fee2e2}
+
+/* Tables */
+.table-wrap{
+  overflow-x:auto;
+  border:1px solid var(--bd);
+  border-radius:var(--radius-sm);
+  margin:16px 0;
+  background:var(--card);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:13.5px;
+}
+thead th{
+  background:rgba(0,0,0,.25);
+  padding:12px 16px;
+  text-align:start;
+  font-size:11px;
+  font-weight:800;
+  color:var(--tx-3);
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  border-bottom:1px solid var(--bd);
+  white-space:nowrap;
+}
+tbody td{
+  padding:12px 16px;
+  border-bottom:1px solid var(--bd);
+  color:var(--tx-2);
+  line-height:1.7;
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+tbody td strong{color:var(--tx)}
+
+/* Badges */
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:3px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+  border:1px solid;
+  white-space:nowrap;
+}
+.badge-ok{background:rgba(34,197,94,.1);color:#86efac;border-color:rgba(34,197,94,.25)}
+.badge-info{background:rgba(58,147,255,.12);color:#93c5fd;border-color:rgba(58,147,255,.25)}
+.badge-warn{background:rgba(245,158,11,.1);color:#fcd34d;border-color:rgba(245,158,11,.25)}
+.badge-err{background:rgba(239,68,68,.1);color:#fca5a5;border-color:rgba(239,68,68,.25)}
+.badge-purple{background:rgba(168,85,247,.12);color:#d8b4fe;border-color:rgba(168,85,247,.25)}
+
+/* Steps */
+.steps{
+  counter-reset:step;
+  margin:20px 0;
+}
+.step{
+  position:relative;
+  padding:18px 18px 18px 68px;
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:var(--radius);
+  margin-bottom:12px;
+  counter-increment:step;
+  transition:all .3s;
+}
+body[dir="rtl"] .step{padding:18px 68px 18px 18px}
+.step::before{
+  content:counter(step);
+  position:absolute;
+  top:18px;
+  inset-inline-start:18px;
+  width:36px;height:36px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--ac-2),var(--ac));
+  color:#fff;
+  font-weight:900;
+  font-size:15px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 14px var(--ac-glow);
+  font-family:var(--font-mono);
+}
+.step:hover{
+  border-color:var(--ac);
+  transform:translateX(-4px);
+}
+body[dir="ltr"] .step:hover{transform:translateX(4px)}
+.step-title{
+  font-size:15px;
+  font-weight:800;
+  color:var(--tx);
+  margin-bottom:6px;
+}
+.step-desc{
+  font-size:13.5px;
+  color:var(--tx-2);
+  line-height:1.8;
+}
+
+/* Accordion */
+.accordion{
+  border:1px solid var(--bd);
+  border-radius:var(--radius-sm);
+  margin:12px 0;
+  overflow:hidden;
+  background:var(--card);
+}
+.acc-item{border-bottom:1px solid var(--bd)}
+.acc-item:last-child{border-bottom:none}
+.acc-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px 18px;
+  cursor:pointer;
+  font-size:14px;
+  font-weight:700;
+  color:var(--tx);
+  transition:all .2s;
+  user-select:none;
+  background:transparent;
+  border:none;
+  width:100%;
+  text-align:start;
+  font-family:inherit;
+}
+.acc-head:hover{background:rgba(58,147,255,.05)}
+.acc-head .arrow{
+  margin-inline-start:auto;
+  transition:transform .3s;
+  font-size:12px;
+  color:var(--tx-3);
+}
+.acc-item.open .acc-head .arrow{transform:rotate(180deg)}
+.acc-body{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .4s cubic-bezier(.16,1,.3,1);
+}
+.acc-item.open .acc-body{max-height:2000px}
+.acc-body-inner{
+  padding:0 18px 18px;
+  font-size:14px;
+  color:var(--tx-2);
+  line-height:1.85;
+  border-top:1px solid var(--bd);
+  padding-top:14px;
+  margin:0 18px 0;
+  padding-inline-start:0;
+  padding-inline-end:0;
+}
+
+/* Tabs */
+.tabs{
+  display:flex;
+  gap:4px;
+  background:var(--bg-2);
+  border:1px solid var(--bd);
+  border-radius:12px;
+  padding:4px;
+  margin-bottom:16px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  padding:9px 16px;
+  background:transparent;
+  border:none;
+  border-radius:8px;
+  color:var(--tx-2);
+  font-family:inherit;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s;
+  white-space:nowrap;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.tab-btn:hover{color:var(--tx);background:var(--card-2)}
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--ac-2),var(--ac));
+  color:#fff;
+  box-shadow:0 4px 12px rgba(58,147,255,.3);
+}
+.tab-pane{display:none}
+.tab-pane.active{display:block;animation:fadeInUp .3s both}
+
+/* API endpoint */
+.endpoint{
+  background:var(--card);
+  border:1px solid var(--bd);
+  border-radius:var(--radius-sm);
+  padding:0;
+  margin:14px 0;
+  overflow:hidden;
+}
+.endpoint-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 18px;
+  background:rgba(0,0,0,.2);
+  border-bottom:1px solid var(--bd);
+  flex-wrap:wrap;
+}
+.method{
+  padding:4px 10px;
+  border-radius:6px;
+  font-family:var(--font-mono);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.5px;
+  flex-shrink:0;
+}
+.method.get{background:rgba(34,197,94,.15);color:#86efac;border:1px solid rgba(34,197,94,.3)}
+.method.post{background:rgba(59,130,246,.15);color:#93c5fd;border:1px solid rgba(59,130,246,.3)}
+.method.put{background:rgba(245,158,11,.15);color:#fcd34d;border:1px solid rgba(245,158,11,.3)}
+.method.delete{background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3)}
+.endpoint-path{
+  font-family:var(--font-mono);
+  font-size:13.5px;
+  color:var(--tx);
+  font-weight:600;
+  direction:ltr;
+  word-break:break-all;
+  flex:1;
+  min-width:0;
+}
+.endpoint-body{
+  padding:16px 18px;
+  font-size:13.5px;
+  color:var(--tx-2);
+  line-height:1.8;
+}
+.endpoint-body p:last-child{margin-bottom:0}
+
+/* Keyboard */
+kbd{
+  display:inline-block;
+  padding:2px 7px;
+  background:var(--card-2);
+  border:1px solid var(--bd-2);
+  border-bottom-width:2px;
+  border-radius:5px;
+  font-family:var(--font-mono);
+  font-size:11px;
+  color:var(--tx);
+  font-weight:600;
+  box-shadow:0 1px 0 rgba(0,0,0,.3);
+}
+
+/* Footer */
+.footer{
+  border-top:1px solid var(--bd);
+  background:var(--bg-2);
+  padding:44px 24px 30px;
+  margin-top:60px;
+}
+.footer-inner{
+  max-width:1200px;
+  margin:0 auto;
+  text-align:center;
+}
+.footer-logo{
+  width:56px;height:56px;
+  margin:0 auto 14px;
+  filter:drop-shadow(0 6px 20px var(--ac-glow));
+}
+.footer-title{
+  font-size:20px;
+  font-weight:900;
+  color:var(--tx);
+  margin-bottom:6px;
+}
+.footer-desc{
+  font-size:13px;
+  color:var(--tx-2);
+  margin-bottom:22px;
+  max-width:500px;
+  margin-inline:auto;
+}
+.footer-links{
+  display:flex;
+  gap:18px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:22px;
+}
+.footer-links a{
+  color:var(--tx-2);
+  font-size:13px;
+  font-weight:600;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.footer-links a:hover{color:var(--ac)}
+.footer-credit{
+  padding-top:22px;
+  border-top:1px solid var(--bd);
+  font-size:12px;
+  color:var(--tx-3);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.footer-credit img{
+  width:26px;height:26px;
+  border-radius:50%;
+  border:2px solid var(--ac);
+  box-shadow:0 0 12px var(--ac-glow);
+}
+.footer-credit a{color:var(--ac);font-weight:700}
+
+/* Back to top */
+.back-top{
+  position:fixed;
+  bottom:24px;
+  inset-inline-end:24px;
+  width:48px;height:48px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--ac-2),var(--ac));
+  border:none;
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+  box-shadow:0 10px 30px var(--ac-glow);
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(20px);
+  transition:all .3s cubic-bezier(.16,1,.3,1);
+  z-index:90;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.back-top.show{opacity:1;visibility:visible;transform:translateY(0)}
+.back-top:hover{transform:translateY(-4px) scale(1.05)}
+
+/* Code copy */
+.code-wrap{
+  position:relative;
+}
+.copy-btn{
+  position:absolute;
+  top:8px;
+  inset-inline-end:8px;
+  padding:4px 10px;
+  background:rgba(58,147,255,.15);
+  border:1px solid rgba(58,147,255,.3);
+  border-radius:6px;
+  color:#93c5fd;
+  font-size:10px;
+  font-weight:700;
+  font-family:var(--font-mono);
+  cursor:pointer;
+  opacity:0;
+  transition:all .2s;
+  z-index:2;
+}
+.code-wrap:hover .copy-btn{opacity:1}
+.copy-btn:hover{background:rgba(58,147,255,.25);color:#dbeafe}
+
+/* Progress bar */
+.progress{
+  position:fixed;
+  top:0;left:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--ac-2),var(--ac-3));
+  width:0;
+  z-index:999;
+  transition:width .1s linear;
+}
+
+/* Mobile */
+.mobile-overlay{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(6px);
+  z-index:98;
+}
+.mobile-overlay.show{display:block}
+
+@media(max-width:1024px){
+  .layout{grid-template-columns:1fr;padding:0 16px}
+  .sidebar{
+    position:fixed;
+    top:0;
+    inset-inline-start:0;
+    height:100vh;
+    width:var(--sidebar-w);
+    max-height:none;
+    background:var(--bg-2);
+    border-inline-end:1px solid var(--bd);
+    padding:80px 12px 24px;
+    z-index:99;
+    transform:translateX(-100%);
+    transition:transform .35s cubic-bezier(.16,1,.3,1);
+    box-shadow:0 0 60px rgba(0,0,0,.5);
+  }
+  body[dir="rtl"] .sidebar{transform:translateX(100%);inset-inline-start:auto;inset-inline-end:0;border-inline-end:none;border-inline-start:1px solid var(--bd)}
+  .sidebar.open{transform:translateX(0)!important}
+  .nav-menu{display:none}
+  .nav-hamburger{display:flex}
+  .nav{padding:0 14px;gap:10px}
+  .nav-brand .name{font-size:13px}
+  .nav-brand .ver{font-size:9px}
+}
+@media(max-width:640px){
+  .hero{padding:50px 16px 40px}
+  .hero-stats{gap:20px}
+  .hero-stat .num{font-size:22px}
+  .section{margin-bottom:48px}
+  .card{padding:16px}
+  .step{padding:16px 16px 16px 60px}
+  body[dir="rtl"] .step{padding:16px 60px 16px 16px}
+  .step::before{width:32px;height:32px;font-size:13px;top:16px;inset-inline-start:16px}
+  .lang-btn{padding:7px 9px;font-size:11px}
+  .lang-btn .lang-name{display:none}
+  .footer{padding:32px 16px 22px}
+}
+
+/* Fade in on scroll */
+.reveal{
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity .6s ease,transform .6s cubic-bezier(.16,1,.3,1);
+}
+.reveal.visible{opacity:1;transform:translateY(0)}
+
+/* Selection */
+::selection{background:rgba(58,147,255,.3);color:#fff}
+</style>
+</head>
+<body dir="rtl">
+
+<!-- Progress bar -->
+<div class="progress" id="progress"></div>
+
+<!-- ═══════════════════ NAVIGATION ═══════════════════ -->
+<nav class="nav">
+  <a href="#top" class="nav-logo">
+    <svg viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="navbg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0058E6"/>
+          <stop offset="8%" stop-color="#3A93FF"/>
+          <stop offset="40%" stop-color="#0054E3"/>
+          <stop offset="88%" stop-color="#0046CA"/>
+          <stop offset="100%" stop-color="#003DB8"/>
+        </linearGradient>
+      </defs>
+      <rect x="4" y="10" width="120" height="108" rx="12" fill="url(#navbg)"/>
+      <rect x="4" y="10" width="120" height="16" fill="rgba(255,255,255,.5)" rx="12"/>
+      <circle cx="14" cy="18" r="3" fill="#7FBA00"/>
+      <text x="22" y="21" font-family="Tahoma" font-size="6" font-weight="bold" fill="#fff">SAZ Bridge</text>
+      <rect x="5" y="26" width="118" height="91" fill="#ECE9D8"/>
+      <g fill="none" stroke="#0054E3" stroke-linecap="round" stroke-width="3">
+        <path d="M24 92 Q64 46 104 92"/>
+        <path d="M20 102 L108 102"/>
+        <line x1="42" y1="72" x2="42" y2="102" stroke-width="2"/>
+        <line x1="64" y1="46" x2="64" y2="102" stroke-width="2"/>
+        <line x1="86" y1="72" x2="86" y2="102" stroke-width="2"/>
+      </g>
+      <circle cx="64" cy="46" r="4" fill="#7FBA00" stroke="#fff" stroke-width="1.5"/>
+    </svg>
+    <div class="nav-brand">
+      <span class="name">SAZ Bridge</span>
+      <span class="ver">v0.0.7</span>
+    </div>
+  </a>
+
+  <div class="nav-menu" id="navMenu">
+    <a href="#intro" class="nav-link" data-i18n="nav_intro">Introduction</a>
+    <a href="#features" class="nav-link" data-i18n="nav_features">Features</a>
+    <a href="#install" class="nav-link" data-i18n="nav_install">Install</a>
+    <a href="#config" class="nav-link" data-i18n="nav_config">Configuration</a>
+    <a href="#sublink" class="nav-link" data-i18n="nav_sublink">Subscriptions</a>
+    <a href="#bot" class="nav-link" data-i18n="nav_bot">Telegram Bot</a>
+    <a href="#api" class="nav-link" data-i18n="nav_api">API</a>
+    <a href="#faq" class="nav-link" data-i18n="nav_faq">FAQ</a>
+  </div>
+
+  <div class="nav-actions">
+    <div class="lang-switch">
+      <button class="lang-btn" id="langBtn" aria-label="Language">
+        <span class="lang-flag" id="curLangFlag">🇮🇷</span>
+        <span class="lang-name" id="curLangName">فارسی</span>
+        <span style="font-size:9px;opacity:.6">▼</span>
+      </button>
+      <div class="lang-menu" id="langMenu">
+        <button data-lang="fa" class="active">
+          <span class="flag">🇮🇷</span><span class="name">فارسی</span>
+        </button>
+        <button data-lang="en">
+          <span class="flag">🇬🇧</span><span class="name">English</span>
+        </button>
+        <button data-lang="ru">
+          <span class="flag">🇷🇺</span><span class="name">Русский</span>
+        </button>
+        <button data-lang="zh">
+          <span class="flag">🇨🇳</span><span class="name">中文</span>
+        </button>
+      </div>
+    </div>
+    <button class="nav-hamburger" id="menuToggle" aria-label="Menu">☰</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      <span data-i18n="hero_badge">Cloudflare Worker Subscription Manager · v0.0.7</span>
+    </div>
+    <h1 class="hero-title">
+      <span data-i18n="hero_title_1">SAZ Bridge</span>
+      <br/>
+      <span style="font-size:.55em;opacity:.7" data-i18n="hero_title_2">The Ultimate Subscription Manager</span>
+    </h1>
+    <p class="hero-sub" data-i18n="hero_sub">
+      Manage users, create Base64 subscriptions, integrate Telegram bots, and enjoy the authentic Windows XP experience — all on Cloudflare's edge network, completely free.
+    </p>
+    <div class="hero-actions">
+      <a href="#install" class="btn btn-primary">
+        🚀 <span data-i18n="hero_cta_start">Get Started</span>
+      </a>
+      <a href="https://github.com/THE-SAZ/saz-bridge" target="_blank" rel="noopener" class="btn btn-ghost">
+        ⭐ <span data-i18n="hero_cta_github">View on GitHub</span>
+      </a>
+      <a href="#api" class="btn btn-green">
+        📡 <span data-i18n="hero_cta_api">API Docs</span>
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="num">0.0.7</div>
+        <div class="lbl" data-i18n="stat_version">Version</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">4</div>
+        <div class="lbl" data-i18n="stat_langs">Languages</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">8+</div>
+        <div class="lbl" data-i18n="stat_clients">Clients</div>
+      </div>
+      <div class="hero-stat">
+        <div class="num">100%</div>
+        <div class="lbl" data-i18n="stat_free">Free</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════ LAYOUT ═══════════════════ -->
+<div class="layout">
+
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-title" data-i18n="sb_getting_started">Getting Started</div>
+    <a href="#intro" class="sidebar-link"><span class="ico">🎯</span><span data-i18n="sb_intro">Introduction</span></a>
+    <a href="#features" class="sidebar-link"><span class="ico">✨</span><span data-i18n="sb_features">Features</span></a>
+    <a href="#arch" class="sidebar-link"><span class="ico">🏗️</span><span data-i18n="sb_arch">Architecture</span></a>
+    <a href="#install" class="sidebar-link"><span class="ico">🚀</span><span data-i18n="sb_install">Installation</span></a>
+    <a href="#setup" class="sidebar-link"><span class="ico">🧙</span><span data-i18n="sb_setup">Setup Wizard</span></a>
+
+    <div class="sidebar-title" data-i18n="sb_guides">Guides</div>
+    <a href="#config" class="sidebar-link"><span class="ico">⚙️</span><span data-i18n="sb_config">Configuration</span></a>
+    <a href="#users" class="sidebar-link"><span class="ico">👥</span><span data-i18n="sb_users">User Management</span></a>
+    <a href="#sublink" class="sidebar-link"><span class="ico">🔗</span><span data-i18n="sb_sublink">Subscription Manager</span></a>
+    <a href="#groups" class="sidebar-link"><span class="ico">📁</span><span data-i18n="sb_groups">Groups</span></a>
+    <a href="#bot" class="sidebar-link"><span class="ico">🤖</span><span data-i18n="sb_bot">Telegram Bot</span></a>
+    <a href="#backup" class="sidebar-link"><span class="ico">💾</span><span data-i18n="sb_backup">Backup & Restore</span></a>
+
+    <div class="sidebar-title" data-i18n="sb_reference">Reference</div>
+    <a href="#clients" class="sidebar-link"><span class="ico">📱</span><span data-i18n="sb_clients">Client Setup</span></a>
+    <a href="#api" class="sidebar-link"><span class="ico">📡</span><span data-i18n="sb_api">API Reference</span></a>
+    <a href="#security" class="sidebar-link"><span class="ico">🔐</span><span data-i18n="sb_security">Security</span></a>
+    <a href="#faq" class="sidebar-link"><span class="ico">❓</span><span data-i18n="sb_faq">FAQ</span></a>
+    <a href="#trouble" class="sidebar-link"><span class="ico">🔧</span><span data-i18n="sb_trouble">Troubleshooting</span></a>
+    <a href="#contrib" class="sidebar-link"><span class="ico">🤝</span><span data-i18n="sb_contrib">Contributing</span></a>
+    <a href="#license" class="sidebar-link"><span class="ico">📜</span><span data-i18n="sb_license">License</span></a>
+  </aside>
+
+  <div class="mobile-overlay" id="overlay"></div>
+
+  <!-- ═══ CONTENT ═══ -->
+  <main class="content">
+
+    <!-- ═══════════════════════════════════════
+         INTRODUCTION
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="intro">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_intro">Introduction</div>
+        <h2 class="section-title"><span class="icon">🎯</span><span data-i18n="intro_title">What is SAZ Bridge?</span></h2>
+        <p class="section-desc" data-i18n="intro_desc">
+          SAZ Bridge is a modern, lightweight, and entirely free subscription management panel for V2Ray / Xray / Vmess / Vless providers, built on Cloudflare Workers.
+        </p>
+      </div>
+      <div class="prose">
+        <p data-i18n="intro_p1">
+          If you're running proxy servers and need to distribute configuration links to users, SAZ Bridge gives you a complete, professional-grade management platform without a single line of backend code and without any VPS or hosting fees.
+        </p>
+        <p data-i18n="intro_p2">
+          It runs entirely on Cloudflare's global edge network — 300+ locations worldwide — giving your users millisecond latency no matter where they are. Configuration, storage, and management all happen inside a Cloudflare Worker and its Key-Value store.
+        </p>
+
+        <div class="grid grid-2" style="margin-top:24px">
+          <div class="feature">
+            <div class="feature-icon">⚡</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="intro_f1_t">Zero Configuration</div>
+              <div class="feature-desc" data-i18n="intro_f1_d">No secrets, no environment variables. Everything lives in KV and is set up via the built-in wizard.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🌍</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="intro_f2_t">Global Network</div>
+              <div class="feature-desc" data-i18n="intro_f2_d">Runs on Cloudflare's edge — fastest response for every user around the world.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">💰</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="intro_f3_t">Completely Free</div>
+              <div class="feature-desc" data-i18n="intro_f3_d">The Cloudflare free tier is more than enough for thousands of users per day.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🎨</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="intro_f4_t">Windows XP Theme</div>
+              <div class="feature-desc" data-i18n="intro_f4_d">Nostalgic Luna theme for the admin panel, with modern UX improvements.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="callout callout-info">
+          <span class="ci">💡</span>
+          <div class="cb">
+            <strong data-i18n="intro_note_t">A Bridge Between Old & New</strong>
+            <span data-i18n="intro_note_d">SAZ Bridge takes the robust, well-tested approach of classic proxy panel software and modernizes it for the serverless era.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         FEATURES
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="features">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_features">Features</div>
+        <h2 class="section-title"><span class="icon">✨</span><span data-i18n="features_title">Everything you need</span></h2>
+        <p class="section-desc" data-i18n="features_desc">A carefully designed set of features covering every aspect of subscription management.</p>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <span class="card-icon">👥</span>
+          <div class="card-title" data-i18n="feat_users_t">Complete User Management</div>
+          <div class="card-desc" data-i18n="feat_users_d">Create, edit, and delete users with custom quota (GB) and expiry (days). Add Telegram Chat ID, assign groups, and track usage in real time.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔗</span>
+          <div class="card-title" data-i18n="feat_subs_t">Advanced Sub Manager</div>
+          <div class="card-desc" data-i18n="feat_subs_d">Build subscription links with custom names, prefixes, and multi-source aggregation. Group them, and monitor visit counts automatically.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">📁</span>
+          <div class="card-title" data-i18n="feat_groups_t">Grouping System</div>
+          <div class="card-desc" data-i18n="feat_groups_d">Organize users and subscriptions into color-coded groups for easy management at scale.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🤖</span>
+          <div class="card-title" data-i18n="feat_bot_t">Telegram Bot Integration</div>
+          <div class="card-desc" data-i18n="feat_bot_d">Auto-configure webhooks from the panel. Users can retrieve their subscription link, view usage, and get instant notifications.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">📱</span>
+          <div class="card-title" data-i18n="feat_qr_t">QR Code Generator</div>
+          <div class="card-desc" data-i18n="feat_qr_d">Instantly generate QR codes for any subscription URL — perfect for mobile onboarding.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🌍</span>
+          <div class="card-title" data-i18n="feat_i18n_t">4 Languages</div>
+          <div class="card-desc" data-i18n="feat_i18n_d">Full support for Persian (RTL), English, Russian, and Chinese. Auto-detects the browser language.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🔐</span>
+          <div class="card-title" data-i18n="feat_sec_t">Security First</div>
+          <div class="card-desc" data-i18n="feat_sec_d">SHA-256 password hashing, 24-hour sessions, HttpOnly + Secure + SameSite cookies, and HTTPS enforcement.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">💾</span>
+          <div class="card-title" data-i18n="feat_backup_t">Backup & Restore</div>
+          <div class="card-desc" data-i18n="feat_backup_d">Full JSON export and import. Migrate between workers in seconds without losing any data.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">📊</span>
+          <div class="card-title" data-i18n="feat_stats_t">Analytics Dashboard</div>
+          <div class="card-desc" data-i18n="feat_stats_d">See top users by traffic, total visits, per-group distribution, and more — all in real time.</div>
+        </div>
+        <div class="card">
+          <span class="card-icon">🎨</span>
+          <div class="card-title" data-i18n="feat_theme_t">Windows XP Theme</div>
+          <div class="card-desc" data-i18n="feat_theme_d">Authentic Luna blue gradients, glossy title bars, working Start Menu, and a live Taskbar.</div>
+        </div>
+      </div>
+
+      <div class="callout callout-ok" style="margin-top:20px">
+        <span class="ci">🎁</span>
+        <div class="cb">
+          <strong data-i18n="features_note_t">Zero External Dependencies</strong>
+          <span data-i18n="features_note_d">No npm packages, no build step, no CDN requirements — a single _worker.js file and one KV namespace is all you need.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         ARCHITECTURE
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="arch">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_arch">Architecture</div>
+        <h2 class="section-title"><span class="icon">🏗️</span><span data-i18n="arch_title">How it works</span></h2>
+        <p class="section-desc" data-i18n="arch_desc">SAZ Bridge uses a modern serverless architecture with a minimal footprint.</p>
+      </div>
+
+      <div class="prose">
+        <h3>🌐 <span data-i18n="arch_stack">Stack Overview</span></h3>
+        <div class="grid grid-3">
+          <div class="card">
+            <span class="card-icon">☁️</span>
+            <div class="card-title">Cloudflare Workers</div>
+            <div class="card-desc" data-i18n="arch_w_d">Runtime environment — serverless JavaScript at the edge.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🗄️</span>
+            <div class="card-title">KV Namespace</div>
+            <div class="card-desc" data-i18n="arch_kv_d">Fast, globally-distributed key-value storage for all data.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🎨</span>
+            <div class="card-title">Inline HTML/CSS/JS</div>
+            <div class="card-desc" data-i18n="arch_ui_d">No framework, no build step — everything in a single file.</div>
+          </div>
+        </div>
+
+        <h3>📋 <span data-i18n="arch_routes">Request Flow</span></h3>
+        <pre data-lang="text"><code>┌──────────────┐
+│   Browser    │
+└──────┬───────┘
+       │  HTTPS
+       ▼
+┌──────────────────────────────────────────────┐
+│         Cloudflare Edge (300+ POPs)          │
+├──────────────────────────────────────────────┤
+│  ┌────────────────────────────────────────┐ │
+│  │           SAZ Bridge Worker            │ │
+│  │                                        │ │
+│  │  /               → Login / Setup       │ │
+│  │  /admin          → Dashboard (SPA)     │ │
+│  │  /api/*          → JSON API            │ │
+│  │  /{subPath}/*    → Base64 Sub Feed     │ │
+│  │  /tg-webhook     → Telegram Updates    │ │
+│  └─────────────────┬──────────────────────┘ │
+│                    │                        │
+│                    ▼                        │
+│           ┌────────────────┐                │
+│           │  KV: SUB_KV    │                │
+│           │  • config      │                │
+│           │  • users       │                │
+│           │  • groups      │                │
+│           │  • sub_links   │                │
+│           │  • session:*   │                │
+│           └────────────────┘                │
+│                                              │
+└──────────────────────────────────────────────┘
+       │
+       ▼
+┌──────────────┐
+│   Client     │  ← Base64 subscription
+│ (V2RayNG,    │
+│  NekoBox...) │
+└──────────────┘</code></pre>
+
+        <h3>📁 <span data-i18n="arch_files">File Structure</span></h3>
+        <pre data-lang="tree"><code>saz-bridge/
+├── _worker.js              ← Main worker code (~2000 lines)
+├── wrangler.toml           ← Cloudflare deployment config
+├── package.json            ← NPM metadata
+├── README.md               ← GitHub landing page
+├── LICENSE                 ← MIT license
+├── .gitignore
+├── .editorconfig
+├── assets/
+│   ├── logo.svg            ← Brand mark
+│   └── banner.svg          ← Hero banner
+└── docs/
+    ├── index.html          ← This documentation
+    ├── DEPLOY.md           ← Deployment guide
+    ├── API.md              ← API reference
+    └── LANGUAGES.md        ← i18n guide</code></pre>
+
+        <h3>🔑 <span data-i18n="arch_data">Data Model</span></h3>
+        <p data-i18n="arch_data_d">All data is stored in a single KV namespace (<code>SUB_KV</code>) under these keys:</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="th_key">Key</th>
+                <th data-i18n="th_value">Value Type</th>
+                <th data-i18n="th_purpose">Purpose</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>config</code></td><td>JSON</td><td data-i18n="td_config">Global settings: password hash, sub path, theme, language, bot token</td></tr>
+              <tr><td><code>users</code></td><td>JSON Array</td><td data-i18n="td_users">All user records with tokens, quota, expiry, links</td></tr>
+              <tr><td><code>groups</code></td><td>JSON Array</td><td data-i18n="td_groups">Color-coded groups for organizing users and subs</td></tr>
+              <tr><td><code>sub_links</code></td><td>JSON Array</td><td data-i18n="td_subs">Custom subscription links with sources, prefix, visits</td></tr>
+              <tr><td><code>session:*</code></td><td>String</td><td data-i18n="td_session">Active admin sessions (TTL: 24h)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         INSTALLATION
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="install">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_install">Installation</div>
+        <h2 class="section-title"><span class="icon">🚀</span><span data-i18n="install_title">Deploy in 5 minutes</span></h2>
+        <p class="section-desc" data-i18n="install_desc">Choose your preferred method — Dashboard for simplicity, Wrangler CLI for power users.</p>
+      </div>
+
+      <div class="tabs" id="installTabs">
+        <button class="tab-btn active" data-tab="dashboard">🖱️ <span data-i18n="tab_dash">Dashboard</span></button>
+        <button class="tab-btn" data-tab="wrangler">⚡ <span data-i18n="tab_wrangler">Wrangler CLI</span></button>
+        <button class="tab-btn" data-tab="github">🔄 <span data-i18n="tab_github">GitHub Actions</span></button>
+      </div>
+
+      <!-- Dashboard method -->
+      <div class="tab-pane active" data-pane="dashboard">
+        <div class="steps">
+          <div class="step">
+            <div class="step-title" data-i18n="st_dash_1_t">Open Cloudflare Dashboard</div>
+            <div class="step-desc" data-i18n="st_dash_1_d">Navigate to <a href="https://dash.cloudflare.com" target="_blank" rel="noopener">dash.cloudflare.com</a> and sign in (or create a free account).</div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="st_dash_2_t">Create a Worker</div>
+            <div class="step-desc" data-i18n="st_dash_2_d">Go to <strong>Workers & Pages → Create → Worker</strong>. Name it <code>saz-bridge</code> and click Deploy.</div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="st_dash_3_t">Paste the Code</div>
+            <div class="step-desc" data-i18n="st_dash_3_d">Click <strong>Edit code</strong>, delete the default content, and paste the full <code>_worker.js</code> from the repository. Save & Deploy.</div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="st_dash_4_t">Create a KV Namespace</div>
+            <div class="step-desc" data-i18n="st_dash_4_d">Go to <strong>Workers & Pages → KV → Create namespace</strong>. Name it <code>SUB_KV</code>.</div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="st_dash_5_t">Bind KV to Worker</div>
+            <div class="step-desc" data-i18n="st_dash_5_d">In your worker → <strong>Settings → Variables → KV Namespace Bindings</strong>: <br/>Variable name: <code>SUB_KV</code> · KV namespace: <code>SUB_KV</code></div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="st_dash_6_t">Visit your Worker URL</div>
+            <div class="step-desc" data-i18n="st_dash_6_d">Open <code>https://saz-bridge.YOUR-SUBDOMAIN.workers.dev</code>. The Setup Wizard appears!</div>
+          </div>
+        </div>
+        <div class="callout callout-ok">
+          <span class="ci">✨</span>
+          <div class="cb">
+            <strong data-i18n="st_dash_note_t">Zero secrets required</strong>
+            <span data-i18n="st_dash_note_d">You don't need to add any environment variables. Every setting is configured inside the panel and stored in KV.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wrangler method -->
+      <div class="tab-pane" data-pane="wrangler">
+        <div class="steps">
+          <div class="step">
+            <div class="step-title" data-i18n="st_wr_1_t">Install prerequisites</div>
+            <div class="step-desc" data-i18n="st_wr_1_d">Node.js 18+ and npm are required.</div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="bash"><code># Install Wrangler globally
+npm install -g wrangler
+
+# Login to Cloudflare
+wrangler login</code></pre>
+        </div>
+        <div class="steps" style="margin-top:16px">
+          <div class="step">
+            <div class="step-title" data-i18n="st_wr_2_t">Clone the repository</div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="bash"><code>git clone https://github.com/THE-SAZ/saz-bridge.git
+cd saz-bridge
+npm install</code></pre>
+        </div>
+        <div class="steps" style="margin-top:16px">
+          <div class="step">
+            <div class="step-title" data-i18n="st_wr_3_t">Create KV namespaces</div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="bash"><code># Production namespace
+wrangler kv:namespace create "SUB_KV"
+# → Copy the "id" to wrangler.toml
+
+# Preview namespace
+wrangler kv:namespace create "SUB_KV" --preview
+# → Copy the "preview_id" to wrangler.toml</code></pre>
+        </div>
+        <div class="steps" style="margin-top:16px">
+          <div class="step">
+            <div class="step-title" data-i18n="st_wr_4_t">Edit wrangler.toml</div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="toml"><code>name = "saz-bridge"
+main = "_worker.js"
+compatibility_date = "2024-11-01"
+
+[[kv_namespaces]]
+binding = "SUB_KV"
+id = "PASTE_YOUR_KV_ID_HERE"
+preview_id = "PASTE_YOUR_PREVIEW_ID_HERE"</code></pre>
+        </div>
+        <div class="steps" style="margin-top:16px">
+          <div class="step">
+            <div class="step-title" data-i18n="st_wr_5_t">Deploy</div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="bash"><code>wrangler deploy
+
+# Or for local development:
+wrangler dev</code></pre>
+        </div>
+      </div>
+
+      <!-- GitHub Actions method -->
+      <div class="tab-pane" data-pane="github">
+        <div class="prose">
+          <p data-i18n="gh_intro">For automated deployments on every push, use GitHub Actions. Create <code>.github/workflows/deploy.yml</code>:</p>
+        </div>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="yaml"><code>name: Deploy SAZ Bridge
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy to Cloudflare
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CF_API_TOKEN }}
+          secrets: |
+            ADMIN_PASSWORD
+        env:
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}</code></pre>
+        </div>
+        <div class="callout callout-warn" style="margin-top:16px">
+          <span class="ci">🔑</span>
+          <div class="cb">
+            <strong data-i18n="gh_note_t">Required Secrets</strong>
+            <span data-i18n="gh_note_d">Add <code>CF_API_TOKEN</code> in your repository secrets. Get it from Cloudflare Dashboard → My Profile → API Tokens with "Edit Cloudflare Workers" template.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         SETUP WIZARD
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="setup">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_setup">Setup Wizard</div>
+        <h2 class="section-title"><span class="icon">🧙</span><span data-i18n="setup_title">First-run configuration</span></h2>
+        <p class="section-desc" data-i18n="setup_desc">On the very first visit, SAZ Bridge guides you through a friendly wizard to configure everything.</p>
+      </div>
+
+      <div class="prose">
+        <p data-i18n="setup_p1">Open your worker URL in a browser. The Setup Wizard automatically appears if no configuration exists.</p>
+
+        <div class="grid grid-2">
+          <div class="card">
+            <span class="card-icon">🔑</span>
+            <div class="card-title" data-i18n="setup_step_1">Admin Password</div>
+            <div class="card-desc" data-i18n="setup_step_1_d">Choose a strong password (min. 6 chars). It's stored as a SHA-256 hash — never in plain text.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🛣️</span>
+            <div class="card-title" data-i18n="setup_step_2">Subscription Path</div>
+            <div class="card-desc" data-i18n="setup_step_2_d">The URL segment for subscription links. Default <code>sub</code>. Can be randomized for security.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🌍</span>
+            <div class="card-title" data-i18n="setup_step_3">Default Language</div>
+            <div class="card-desc" data-i18n="setup_step_3_d">The language shown to new visitors. Can be overridden per user with the URL parameter <code>?lang=xx</code>.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🎨</span>
+            <div class="card-title" data-i18n="setup_step_4">Panel Theme</div>
+            <div class="card-desc" data-i18n="setup_step_4_d">Choose between Luna Blue, Classic, and Silver themes.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🤖</span>
+            <div class="card-title" data-i18n="setup_step_5">Telegram Bot (optional)</div>
+            <div class="card-desc" data-i18n="setup_step_5_d">Paste your bot token to enable the Telegram integration. Can be added later.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">✨</span>
+            <div class="card-title" data-i18n="setup_step_6">Finish</div>
+            <div class="card-desc" data-i18n="setup_step_6_d">Click Setup — you're automatically logged in and taken to the dashboard.</div>
+          </div>
+        </div>
+
+        <div class="callout callout-info" style="margin-top:20px">
+          <span class="ci">🔄</span>
+          <div class="cb">
+            <strong data-i18n="setup_reset_t">Resetting Setup</strong>
+            <span data-i18n="setup_reset_d">If you ever need to re-run the wizard, delete the <code>config</code> key from KV and reload the page.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         CONFIGURATION
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="config">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_config">Configuration</div>
+        <h2 class="section-title"><span class="icon">⚙️</span><span data-i18n="config_title">Panel Settings</span></h2>
+        <p class="section-desc" data-i18n="config_desc">All settings are managed from the Settings tab inside the admin panel.</p>
+      </div>
+
+      <div class="prose">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="th_setting">Setting</th>
+                <th data-i18n="th_default">Default</th>
+                <th data-i18n="th_desc">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>defaultLang</strong></td>
+                <td><code>fa</code></td>
+                <td data-i18n="set_lang">The default panel language. One of: <code>fa</code>, <code>en</code>, <code>ru</code>, <code>zh</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>subPath</strong></td>
+                <td><code>sub</code></td>
+                <td data-i18n="set_subpath">URL segment used for subscription feeds. Keep it random for security (e.g. <code>x7k9m2</code>).</td>
+              </tr>
+              <tr>
+                <td><strong>theme</strong></td>
+                <td><code>luna</code></td>
+                <td data-i18n="set_theme">Visual theme. One of: <code>luna</code>, <code>classic</code>, <code>silver</code>.</td>
+              </tr>
+              <tr>
+                <td><strong>announcement</strong></td>
+                <td><em>empty</em></td>
+                <td data-i18n="set_ann">A short message shown on the dashboard home. Max 500 characters.</td>
+              </tr>
+              <tr>
+                <td><strong>botToken</strong></td>
+                <td><em>empty</em></td>
+                <td data-i18n="set_bot">Telegram bot token from @BotFather. Enables webhook and inline button features.</td>
+              </tr>
+              <tr>
+                <td><strong>passwordHash</strong></td>
+                <td>—</td>
+                <td data-i18n="set_pass">SHA-256 hash of the admin password. Set during Setup Wizard or via Settings.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-warn">
+          <span class="ci">⚠️</span>
+          <div class="cb">
+            <strong data-i18n="config_path_t">Choosing a Secure Sub Path</strong>
+            <span data-i18n="config_path_d">Avoid guessable paths like <code>sub</code> or <code>link</code> in production. Use a random string such as <code>br-7k3p9x</code>.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         USER MANAGEMENT
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="users">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_users">User Management</div>
+        <h2 class="section-title"><span class="icon">👥</span><span data-i18n="users_title">Managing users</span></h2>
+        <p class="section-desc" data-i18n="users_desc">Create, edit, and monitor every user from a single dashboard.</p>
+      </div>
+
+      <div class="prose">
+        <h3>📝 <span data-i18n="users_fields">User fields</span></h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="th_field">Field</th>
+                <th data-i18n="th_type">Type</th>
+                <th data-i18n="th_req">Required</th>
+                <th data-i18n="th_desc">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>name</strong></td>
+                <td>String</td>
+                <td><span class="badge badge-ok">✓</span></td>
+                <td data-i18n="uf_name">Display name for the user.</td>
+              </tr>
+              <tr>
+                <td><strong>quotaGB</strong></td>
+                <td>Number</td>
+                <td>—</td>
+                <td data-i18n="uf_quota">Traffic limit in gigabytes. <code>0</code> means unlimited.</td>
+              </tr>
+              <tr>
+                <td><strong>days</strong></td>
+                <td>Number</td>
+                <td>—</td>
+                <td data-i18n="uf_days">Number of days until expiry. <code>0</code> means no expiry.</td>
+              </tr>
+              <tr>
+                <td><strong>group</strong></td>
+                <td>String</td>
+                <td>—</td>
+                <td data-i18n="uf_group">Group ID for organization.</td>
+              </tr>
+              <tr>
+                <td><strong>tgId</strong></td>
+                <td>String</td>
+                <td>—</td>
+                <td data-i18n="uf_tgid">Telegram Chat ID for bot integration.</td>
+              </tr>
+              <tr>
+                <td><strong>links</strong></td>
+                <td>Text</td>
+                <td>—</td>
+                <td data-i18n="uf_links">One proxy link per line: <code>vmess://</code>, <code>vless://</code>, etc.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>🔄 <span data-i18n="users_status">User statuses</span></h3>
+        <div class="grid grid-3">
+          <div class="card" style="border-color:rgba(34,197,94,.3)">
+            <div class="card-title" style="color:#86efac">✅ <span data-i18n="us_active">Active</span></div>
+            <div class="card-desc" data-i18n="us_active_d">User has valid expiry and hasn't exceeded quota. Subscription works.</div>
+          </div>
+          <div class="card" style="border-color:rgba(245,158,11,.3)">
+            <div class="card-title" style="color:#fcd34d">⏰ <span data-i18n="us_expired">Expired</span></div>
+            <div class="card-desc" data-i18n="us_expired_d">Expiry date has passed. Subscription feed returns 403 with a friendly page.</div>
+          </div>
+          <div class="card" style="border-color:rgba(239,68,68,.3)">
+            <div class="card-title" style="color:#fca5a5">🚫 <span data-i18n="us_disabled">Disabled</span></div>
+            <div class="card-desc" data-i18n="us_disabled_d">Manually disabled by admin. All access blocked.</div>
+          </div>
+        </div>
+
+        <h3>🎯 <span data-i18n="users_actions">Quick actions</span></h3>
+        <ul>
+          <li><strong data-i18n="ua_copy">Copy subscription link</strong> — copies the full URL to clipboard.</li>
+          <li><strong data-i18n="ua_qr">Show QR code</strong> — generates a scannable QR via external API.</li>
+          <li><strong data-i18n="ua_edit">Edit</strong> — opens the modal with all fields pre-filled.</li>
+          <li><strong data-i18n="ua_delete">Delete</strong> — permanently removes the user (with confirmation).</li>
+          <li><strong data-i18n="ua_search">Search</strong> — filter the table instantly by any field.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         SUBSCRIPTION MANAGER
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="sublink">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_sublink">Subscriptions</div>
+        <h2 class="section-title"><span class="icon">🔗</span><span data-i18n="subs_title">Subscription Manager</span></h2>
+        <p class="section-desc" data-i18n="subs_desc">Build custom subscriptions that aggregate multiple users' links under one URL.</p>
+      </div>
+
+      <div class="prose">
+        <h3>🎯 <span data-i18n="subs_what">What is a subscription?</span></h3>
+        <p data-i18n="subs_what_d">A subscription is a single URL that returns a Base64-encoded list of proxy links. Clients like V2RayNG read this URL and automatically add all the configs inside.</p>
+
+        <h3>📐 <span data-i18n="subs_url">URL format</span></h3>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="url"><code>https://YOUR-WORKER.workers.dev/{SUB_PATH}/{TOKEN}</code></pre>
+        </div>
+
+        <h3>🧩 <span data-i18n="subs_types">Two kinds of subscriptions</span></h3>
+        <div class="grid grid-2">
+          <div class="card">
+            <span class="card-icon">👤</span>
+            <div class="card-title" data-i18n="subs_user_t">User Subscription</div>
+            <div class="card-desc" data-i18n="subs_user_d">Automatically created for every user. Uses their individual token. Consists only of their own links.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🔗</span>
+            <div class="card-title" data-i18n="subs_custom_t">Custom Subscription</div>
+            <div class="card-desc" data-i18n="subs_custom_d">Built from the Sub Manager. Combines multiple users' links + direct links. Has its own token and visit counter.</div>
+          </div>
+        </div>
+
+        <h3>🎛️ <span data-i18n="subs_options">Custom subscription options</span></h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="th_option">Option</th>
+                <th data-i18n="th_desc">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>name</strong></td>
+                <td data-i18n="so_name">Internal name for identification.</td>
+              </tr>
+              <tr>
+                <td><strong>prefix</strong></td>
+                <td data-i18n="so_prefix">Icon/emoji prefix shown in clients (e.g. <code>🌉 SAZ</code>).</td>
+              </tr>
+              <tr>
+                <td><strong>group</strong></td>
+                <td data-i18n="so_group">Assign to a group for organization.</td>
+              </tr>
+              <tr>
+                <td><strong>sources</strong></td>
+                <td data-i18n="so_sources">Array of user tokens to pull links from.</td>
+              </tr>
+              <tr>
+                <td><strong>directLinks</strong></td>
+                <td data-i18n="so_direct">Additional links not tied to any user.</td>
+              </tr>
+              <tr>
+                <td><strong>quotaGB</strong></td>
+                <td data-i18n="so_quota">Total traffic limit for the subscription (0 = unlimited).</td>
+              </tr>
+              <tr>
+                <td><strong>days</strong></td>
+                <td data-i18n="so_days">Days until subscription expires.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>📤 <span data-i18n="subs_response">Response format</span></h3>
+        <p data-i18n="subs_response_d">The subscription endpoint returns the links joined by newlines, encoded as Base64:</p>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="text"><code>vmess://eyJ2IjoiMiIsInBzIjoi...
+vless://uuid@host:443?type=ws...
+trojan://password@host:443...
+ss://base64@host:8388...</code></pre>
+        </div>
+        <p data-i18n="subs_headers_d">Response headers include standard subscription metadata:</p>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="http"><code>Content-Type: text/plain; charset=utf-8
+Cache-Control: no-store, no-cache
+Profile-Update-Interval: 6
+Subscription-Userinfo: upload=0; download=12345; total=53687091200; expire=1735689600</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         GROUPS
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="groups">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_groups">Groups</div>
+        <h2 class="section-title"><span class="icon">📁</span><span data-i18n="groups_title">Organizing with Groups</span></h2>
+        <p class="section-desc" data-i18n="groups_desc">Keep hundreds of users and subscriptions tidy with color-coded groups.</p>
+      </div>
+
+      <div class="prose">
+        <p data-i18n="groups_p1">Groups help you organize both users and subscriptions. Each group has a name, a color, and can be used for filtering, bulk operations, and reporting.</p>
+
+        <div class="grid grid-3">
+          <div class="card">
+            <span class="card-icon">🎨</span>
+            <div class="card-title" data-i18n="gr_color_t">Custom Colors</div>
+            <div class="card-desc" data-i18n="gr_color_d">Pick any hex color to visually distinguish groups.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🔢</span>
+            <div class="card-title" data-i18n="gr_count_t">Count Indicators</div>
+            <div class="card-desc" data-i18n="gr_count_d">See user and subscription counts per group instantly.</div>
+          </div>
+          <div class="card">
+            <span class="card-icon">🧹</span>
+            <div class="card-title" data-i18n="gr_clean_t">Safe Deletion</div>
+            <div class="card-desc" data-i18n="gr_clean_d">Deleting a group automatically detaches its members without data loss.</div>
+          </div>
+        </div>
+
+        <h3>📋 <span data-i18n="gr_examples">Example use cases</span></h3>
+        <ul>
+          <li><span class="badge badge-info">VIP</span> — for premium customers</li>
+          <li><span class="badge badge-ok">Trial</span> — for free trial users</li>
+          <li><span class="badge badge-warn">Reseller</span> — for reseller accounts</li>
+          <li><span class="badge badge-err">Banned</span> — for suspended users</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         TELEGRAM BOT
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="bot">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_bot">Telegram Bot</div>
+        <h2 class="section-title"><span class="icon">🤖</span><span data-i18n="bot_title">Telegram Integration</span></h2>
+        <p class="section-desc" data-i18n="bot_desc">Let your users retrieve their subscription link directly from Telegram — no login needed.</p>
+      </div>
+
+      <div class="prose">
+        <h3>🔧 <span data-i18n="bot_setup">Setup</span></h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-title" data-i18n="bot_st_1_t">Talk to @BotFather</div>
+            <div class="step-desc" data-i18n="bot_st_1_d">Open Telegram, search for <a href="https://t.me/BotFather" target="_blank" rel="noopener">@BotFather</a>, and send <code>/newbot</code>. Follow the instructions to get your bot token.</div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="bot_st_2_t">Paste token in the panel</div>
+            <div class="step-desc" data-i18n="bot_st_2_d">In SAZ Bridge → <strong>Bot</strong> tab → paste the token and click <strong>Connect Bot</strong>. The webhook is set automatically.</div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="bot_st_3_t">Link users to Telegram</div>
+            <div class="step-desc" data-i18n="bot_st_3_d">Get each user's Chat ID from <a href="https://t.me/userinfobot" target="_blank" rel="noopener">@userinfobot</a> and enter it in their user record.</div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="bot_st_4_t">Done!</div>
+            <div class="step-desc" data-i18n="bot_st_4_d">Users can now send <code>/start</code> to the bot and get their subscription, usage stats, and more.</div>
+          </div>
+        </div>
+
+        <h3>💬 <span data-i18n="bot_cmds">Available commands</span></h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th data-i18n="th_cmd">Command</th>
+                <th data-i18n="th_desc">Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><code>/start</code></td><td data-i18n="bc_start">Show welcome message with inline keyboard.</td></tr>
+              <tr><td><code>/mysub</code></td><td data-i18n="bc_mysub">Return the user's personal subscription URL.</td></tr>
+              <tr><td><code>/usage</code></td><td data-i18n="bc_usage">Display traffic usage with a progress bar.</td></tr>
+              <tr><td><code>/help</code></td><td data-i18n="bc_help">Show all available commands.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout callout-info">
+          <span class="ci">📢</span>
+          <div class="cb">
+            <strong data-i18n="bot_broadcast_t">Broadcast</strong>
+            <span data-i18n="bot_broadcast_d">From the Bot tab, you can send a message to all linked users at once — useful for announcements.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         BACKUP & RESTORE
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="backup">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_backup">Backup & Restore</div>
+        <h2 class="section-title"><span class="icon">💾</span><span data-i18n="backup_title">Never lose your data</span></h2>
+        <p class="section-desc" data-i18n="backup_desc">Export everything as JSON, migrate between workers, or restore from a previous snapshot.</p>
+      </div>
+
+      <div class="prose">
+        <h3>📤 <span data-i18n="backup_export">Exporting</span></h3>
+        <p data-i18n="backup_export_d">Navigate to <strong>Backup → Export JSON</strong>. A file named <code>saz-bridge-backup-YYYY-MM-DD.json</code> is downloaded containing:</p>
+        <ul>
+          <li>⚙️ All configuration (excluding password hash)</li>
+          <li>👥 Every user record</li>
+          <li>📁 All groups</li>
+          <li>🔗 Custom subscriptions</li>
+        </ul>
+
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="json"><code>{
+  "version": "0.0.7",
+  "app": "SAZ Bridge",
+  "exportedAt": "2024-12-01T12:00:00Z",
+  "config": {
+    "subPath": "sub",
+    "defaultLang": "fa",
+    "theme": "luna",
+    "announcement": ""
+  },
+  "users": [ ... ],
+  "groups": [ ... ],
+  "subLinks": [ ... ]
+}</code></pre>
+        </div>
+
+        <h3>📥 <span data-i18n="backup_import">Importing</span></h3>
+        <p data-i18n="backup_import_d">Use <strong>Backup → Restore</strong> and select a previously-exported JSON file. Your current data will be <strong>overwritten</strong> — make a fresh backup first!</p>
+
+        <div class="callout callout-warn">
+          <span class="ci">⚠️</span>
+          <div class="cb">
+            <strong data-i18n="backup_warn_t">Import overwrites everything</strong>
+            <span data-i18n="backup_warn_d">Import replaces users, groups, and subscriptions entirely. The admin password is preserved.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         CLIENT SETUP
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="clients">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_clients">Client Setup</div>
+        <h2 class="section-title"><span class="icon">📱</span><span data-i18n="clients_title">Compatible Clients</span></h2>
+        <p class="section-desc" data-i18n="clients_desc">SAZ Bridge works with every major subscription-compatible client out of the box.</p>
+      </div>
+
+      <div class="prose">
+        <div class="grid grid-2">
+          <div class="feature">
+            <div class="feature-icon">🤖</div>
+            <div class="feature-body">
+              <div class="feature-title">V2RayNG <span class="badge badge-ok">Android</span></div>
+              <div class="feature-desc" data-i18n="cl_v2rayng">Menu → Subscription group settings → Add URL. Supports Base64 feeds and Subscription-Userinfo header.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🐈</div>
+            <div class="feature-body">
+              <div class="feature-title">NekoBox <span class="badge badge-ok">Android</span></div>
+              <div class="feature-desc" data-i18n="cl_nekobox">Groups → Add → URL. Fully supports parsing our headers and view counts.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🍎</div>
+            <div class="feature-body">
+              <div class="feature-title">Shadowrocket <span class="badge badge-purple">iOS</span></div>
+              <div class="feature-desc" data-i18n="cl_shadow">Home → Add → Subscribe. Paste the URL and enable auto-update.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">📦</div>
+            <div class="feature-body">
+              <div class="feature-title">V2Box <span class="badge badge-purple">iOS</span></div>
+              <div class="feature-desc" data-i18n="cl_v2box">Subscriptions → + → paste URL. Auto-detects our content type.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">⚔️</div>
+            <div class="feature-body">
+              <div class="feature-title">Clash / Mihomo <span class="badge badge-info">Desktop</span></div>
+              <div class="feature-desc" data-i18n="cl_clash">Add as proxy provider. Detected via User-Agent and returned as YAML content type.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🖥️</div>
+            <div class="feature-body">
+              <div class="feature-title">v2rayN <span class="badge badge-warn">Windows</span></div>
+              <div class="feature-desc" data-i18n="cl_v2rayn">Subscription → Subscription settings → Add. Auto-update every 6 hours.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🚀</div>
+            <div class="feature-body">
+              <div class="feature-title">Sing-Box <span class="badge badge-info">Cross-Platform</span></div>
+              <div class="feature-desc" data-i18n="cl_singbox">Remote outbound support — add the subscription URL directly.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🌐</div>
+            <div class="feature-body">
+              <div class="feature-title">Streisand <span class="badge badge-purple">iOS/Mac</span></div>
+              <div class="feature-desc" data-i18n="cl_streisand">Full subscription support with userinfo header parsing.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         API REFERENCE
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="api">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_api">API</div>
+        <h2 class="section-title"><span class="icon">📡</span><span data-i18n="api_title">API Reference</span></h2>
+        <p class="section-desc" data-i18n="api_desc">Programmatically manage everything through JSON endpoints.</p>
+      </div>
+
+      <div class="prose">
+        <div class="callout callout-info">
+          <span class="ci">🔑</span>
+          <div class="cb">
+            <strong data-i18n="api_auth_t">Authentication</strong>
+            <span data-i18n="api_auth_d">All endpoints require a valid <code>session</code> cookie. Obtain it by POSTing to <code>/login</code> with the admin password.</span>
+          </div>
+        </div>
+
+        <h3>🔐 <span data-i18n="api_auth">Authentication</span></h3>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/login</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_login_d">Authenticates with the admin password. Sets a session cookie on success.</p>
+            <div class="code-wrap">
+              <button class="copy-btn">📋</button>
+              <pre data-lang="bash"><code>curl -X POST https://your-worker.workers.dev/login \
+  -d "password=YOUR_PASSWORD" \
+  -c cookies.txt</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/logout</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_logout_d">Destroys the session and redirects to login.</p>
+          </div>
+        </div>
+
+        <h3>👥 <span data-i18n="api_users">Users</span></h3>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/user</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_user_create">Create a new user. Returns the generated token.</p>
+            <div class="code-wrap">
+              <button class="copy-btn">📋</button>
+              <pre data-lang="json"><code>{
+  "name": "Ali",
+  "quotaGB": 50,
+  "days": 30,
+  "group": "grp_abc123",
+  "tgId": "123456789",
+  "links": "vmess://...\nvless://..."
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/user/:token</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_user_update">Update an existing user. All fields are optional.</p>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/user/:token</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_user_delete">Delete a user permanently.</p>
+          </div>
+        </div>
+
+        <h3>🔗 <span data-i18n="api_subs">Subscriptions</span></h3>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/sub</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_sub_create">Create a custom subscription.</p>
+            <div class="code-wrap">
+              <button class="copy-btn">📋</button>
+              <pre data-lang="json"><code>{
+  "name": "Netflix Sub",
+  "prefix": "🌉 SAZ",
+  "group": "grp_abc123",
+  "sources": ["user_token_1", "user_token_2"],
+  "directLinks": "vmess://...",
+  "quotaGB": 100,
+  "days": 60
+}</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method put">PUT</span>
+            <span class="endpoint-path">/api/sub/:id</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_sub_update">Update a subscription.</p>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/sub/:id</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_sub_delete">Delete a subscription.</p>
+          </div>
+        </div>
+
+        <h3>📁 <span data-i18n="api_groups">Groups</span></h3>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/group</span>
+          </div>
+          <div class="endpoint-body">
+            <div class="code-wrap">
+              <button class="copy-btn">📋</button>
+              <pre data-lang="json"><code>{ "name": "VIP", "color": "#7FBA00" }</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method delete">DELETE</span>
+            <span class="endpoint-path">/api/group/:id</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_group_delete">Delete a group and detach its members.</p>
+          </div>
+        </div>
+
+        <h3>⚙️ <span data-i18n="api_config">Configuration</span></h3>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/config</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_config_get">Get current configuration (password hash and bot token removed).</p>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/config</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_config_post">Update configuration.</p>
+          </div>
+        </div>
+
+        <h3>🤖 <span data-i18n="api_bot">Bot</span></h3>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/bot/set-webhook</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_bot_set">Register the Telegram webhook.</p>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/bot/unset-webhook</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_bot_unset">Remove the webhook.</p>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/bot/broadcast</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_bot_broadcast">Send a message to all linked users.</p>
+            <div class="code-wrap">
+              <button class="copy-btn">📋</button>
+              <pre data-lang="json"><code>{ "text": "Service maintenance at 03:00 UTC" }</code></pre>
+            </div>
+          </div>
+        </div>
+
+        <h3>💾 <span data-i18n="api_backup">Backup</span></h3>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/backup</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_backup_get">Download full backup as JSON.</p>
+          </div>
+        </div>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/restore</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_restore_post">Restore from a backup JSON. Overwrites existing data.</p>
+          </div>
+        </div>
+
+        <h3>📡 <span data-i18n="api_sub_feed">Subscription Feed</span></h3>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/{subPath}/:token</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_feed_d">Returns Base64-encoded subscription. Content-Type varies by User-Agent (<code>text/yaml</code> for Clash, <code>text/plain</code> otherwise).</p>
+          </div>
+        </div>
+
+        <h3>🔔 <span data-i18n="api_webhook">Telegram Webhook</span></h3>
+
+        <div class="endpoint">
+          <div class="endpoint-head">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/tg-webhook</span>
+          </div>
+          <div class="endpoint-body">
+            <p data-i18n="api_webhook_d">Called by Telegram for incoming updates. Not intended for direct use.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         SECURITY
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="security">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_security">Security</div>
+        <h2 class="section-title"><span class="icon">🔐</span><span data-i18n="sec_title">Built-in Security</span></h2>
+        <p class="section-desc" data-i18n="sec_desc">SAZ Bridge follows modern security best practices out of the box.</p>
+      </div>
+
+      <div class="prose">
+        <div class="grid grid-2">
+          <div class="feature">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="sec_hash_t">SHA-256 Password Hashing</div>
+              <div class="feature-desc" data-i18n="sec_hash_d">Passwords are never stored in plain text. Only a salted SHA-256 hash lives in KV.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">⏱️</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="sec_ttl_t">24-Hour Sessions</div>
+              <div class="feature-desc" data-i18n="sec_ttl_d">Sessions automatically expire after 24 hours. No permanent cookies.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🍪</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="sec_cookies_t">Hardened Cookies</div>
+              <div class="feature-desc" data-i18n="sec_cookies_d">HttpOnly + Secure + SameSite=Lax — the browser can't read them from JavaScript.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="sec_https_t">HTTPS Enforced</div>
+              <div class="feature-desc" data-i18n="sec_https_d">Cloudflare provides automatic HTTPS with HTTP/3 and TLS 1.3.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🧼</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="sec_sanitize_t">Input Sanitization</div>
+              <div class="feature-desc" data-i18n="sec_sanitize_d">All user input is validated and escaped to prevent XSS and injection attacks.</div>
+            </div>
+          </div>
+          <div class="feature">
+            <div class="feature-icon">🛡️</div>
+            <div class="feature-body">
+              <div class="feature-title" data-i18n="sec_ratelimit_t">Rate Limiting Ready</div>
+              <div class="feature-desc" data-i18n="sec_ratelimit_d">Enable Cloudflare's rate limiting rules to prevent brute-force attacks.</div>
+            </div>
+          </div>
+        </div>
+
+        <h3>💡 <span data-i18n="sec_recommend">Recommended practices</span></h3>
+        <ul>
+          <li data-i18n="sec_r1">Use a strong password (12+ chars, mix of cases, digits, symbols).</li>
+          <li data-i18n="sec_r2">Randomize <code>subPath</code> (avoid <code>sub</code> or <code>link</code>).</li>
+          <li data-i18n="sec_r3">Enable Cloudflare Access for <code>/admin</code> if possible.</li>
+          <li data-i18n="sec_r4">Rotate the admin password every few months.</li>
+          <li data-i18n="sec_r5">Take regular JSON backups.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         FAQ
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="faq">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_faq">FAQ</div>
+        <h2 class="section-title"><span class="icon">❓</span><span data-i18n="faq_title">Frequently Asked Questions</span></h2>
+        <p class="section-desc" data-i18n="faq_desc">Answers to the most common questions.</p>
+      </div>
+
+      <div class="accordion" id="faqAcc">
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q1">Do I need a VPS or hosting?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a1">
+            <strong>No!</strong> SAZ Bridge runs entirely on Cloudflare Workers, which has a generous free tier. You don't need a VPS, shared hosting, or any other infrastructure.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q2">What are the free tier limits?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a2">
+            Cloudflare Workers free plan: <strong>100,000 requests/day</strong>. KV free plan: <strong>100,000 reads + 1,000 writes/day</strong>. This is enough for thousands of subscription updates per day.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q3">How do users connect to the Telegram bot?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a3">
+            Get each user's Chat ID from <a href="https://t.me/userinfobot">@userinfobot</a> and enter it in the user's profile in the panel. From then on, the user can send <code>/start</code> to your bot and receive their subscription.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q4">Does it work with Clash / Mihomo?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a4">
+            Yes. SAZ Bridge detects Clash/Mihomo by User-Agent and returns the subscription with <code>Content-Type: text/yaml</code> for proper parsing.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q5">How do I backup my data?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a5">
+            Open the panel → Start Menu → <strong>Backup</strong> → <strong>Export JSON</strong>. A file is downloaded containing all users, groups, subscriptions, and settings. Keep it safe — you can restore from it anytime.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q6">Can I use a custom domain?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a6">
+            Yes. In Cloudflare Dashboard → your Worker → <strong>Settings → Domains & Routes</strong>, add your custom domain. SSL is configured automatically.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q7">What proxy protocols are supported?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a7">
+            VMess, VLESS, Trojan, Shadowsocks, SSR, Hysteria, Hysteria2, TUIC, SOCKS, WireGuard. Any standard proxy link format is accepted.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q8">Is my data safe?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a8">
+            Yes. Data lives only in your own Cloudflare KV namespace, inaccessible to anyone else. Passwords are SHA-256 hashed. Sessions are HttpOnly cookies with 24-hour TTL.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q9">Can I add more languages?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a9">
+            Yes — see <a href="https://github.com/THE-SAZ/saz-bridge/blob/main/docs/LANGUAGES.md">docs/LANGUAGES.md</a> for the i18n guide. Adding a new language requires only one object in the <code>I18N</code> constant.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="faq_q10">How do I update SAZ Bridge?</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="faq_a10">
+            <code>git pull origin main</code> then <code>wrangler deploy</code>. Your data in KV remains untouched across updates.
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         TROUBLESHOOTING
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="trouble">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_trouble">Troubleshooting</div>
+        <h2 class="section-title"><span class="icon">🔧</span><span data-i18n="tr_title">Common Issues</span></h2>
+        <p class="section-desc" data-i18n="tr_desc">Solutions to problems users frequently encounter.</p>
+      </div>
+
+      <div class="accordion" id="trAcc">
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="tr_q1">White screen or blank page</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="tr_a1">
+            <strong>Cause:</strong> JavaScript error or missing KV binding.<br/>
+            <strong>Fix:</strong> Open DevTools (F12) → Console. Check that the <code>SUB_KV</code> binding is configured. Try a hard refresh (Ctrl+Shift+R).
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="tr_q2">Subscription returns empty content</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="tr_a2">
+            <strong>Cause:</strong> No valid proxy links in the user's configuration.<br/>
+            <strong>Fix:</strong> Edit the user and paste at least one valid link starting with <code>vmess://</code>, <code>vless://</code>, <code>trojan://</code>, or <code>ss://</code>.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="tr_q3">Telegram bot doesn't respond</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="tr_a3">
+            <strong>Cause:</strong> Webhook not set, or token invalid.<br/>
+            <strong>Fix:</strong> Panel → Bot tab → paste token → click <strong>Connect Bot</strong>. Test with <code>/start</code> in Telegram.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="tr_q4">KV write limit exceeded</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="tr_a4">
+            <strong>Cause:</strong> Free tier provides only 1,000 KV writes/day.<br/>
+            <strong>Fix:</strong> Subscriptions update traffic on each request. Reduce update frequency on client, or upgrade to Workers Paid plan.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="tr_q5">Can't log in — password wrong</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="tr_a5">
+            <strong>Fix:</strong> Delete the <code>config</code> key from KV via Cloudflare Dashboard. Reload the page — the Setup Wizard appears and you can set a new password.
+          </div></div>
+        </div>
+        <div class="acc-item">
+          <button class="acc-head">
+            <span data-i18n="tr_q6">Client shows "unsupported" error</span>
+            <span class="arrow">▼</span>
+          </button>
+          <div class="acc-body"><div class="acc-body-inner" data-i18n="tr_a6">
+            <strong>Cause:</strong> Client can't parse some links.<br/>
+            <strong>Fix:</strong> Verify the links are correctly formatted. Test the URL in a browser — it should return plain Base64 text.
+          </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         CONTRIBUTING
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="contrib">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_contrib">Contributing</div>
+        <h2 class="section-title"><span class="icon">🤝</span><span data-i18n="con_title">Join the Project</span></h2>
+        <p class="section-desc" data-i18n="con_desc">Contributions of all kinds are welcome — code, docs, translations, bug reports.</p>
+      </div>
+
+      <div class="prose">
+        <h3>🔀 <span data-i18n="con_flow">Contribution flow</span></h3>
+        <div class="steps">
+          <div class="step">
+            <div class="step-title" data-i18n="con_step_1">Fork the repository</div>
+            <div class="step-desc" data-i18n="con_step_1_d">Click the <strong>Fork</strong> button on GitHub and clone your fork.</div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="con_step_2">Create a branch</div>
+            <div class="step-desc"><code>git checkout -b feature/amazing-feature</code></div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="con_step_3">Commit your changes</div>
+            <div class="step-desc"><code>git commit -m 'Add amazing feature'</code></div>
+          </div>
+          <div class="step">
+            <div class="step-title" data-i18n="con_step_4">Push &amp; open a PR</div>
+            <div class="step-desc"><code>git push origin feature/amazing-feature</code></div>
+          </div>
+        </div>
+
+        <h3>💡 <span data-i18n="con_ideas">Ideas for contributions</span></h3>
+        <ul>
+          <li data-i18n="con_i1">Add a new language to the <code>I18N</code> object.</li>
+          <li data-i18n="con_i2">Improve UI accessibility.</li>
+          <li data-i18n="con_i3">Add a new client profile preset.</li>
+          <li data-i18n="con_i4">Write tests for the API endpoints.</li>
+          <li data-i18n="con_i5">Improve the documentation.</li>
+          <li data-i18n="con_i6">Add export to Clash YAML format.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════
+         LICENSE
+         ═══════════════════════════════════════ -->
+    <section class="section reveal" id="license">
+      <div class="section-header">
+        <div class="section-eyebrow" data-i18n="sb_license">License</div>
+        <h2 class="section-title"><span class="icon">📜</span><span data-i18n="lic_title">MIT License</span></h2>
+      </div>
+      <div class="prose">
+        <p data-i18n="lic_p1">SAZ Bridge is released under the permissive <strong>MIT License</strong>. You're free to use it commercially, modify it, and distribute it — just keep the copyright notice.</p>
+        <div class="code-wrap">
+          <button class="copy-btn">📋</button>
+          <pre data-lang="text"><code>MIT License
+
+Copyright (c) 2024 THE SAZ
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.</code></pre>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <svg class="footer-logo" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="10" width="120" height="108" rx="12" fill="#0054E3"/>
+      <rect x="4" y="10" width="120" height="16" fill="rgba(255,255,255,.5)" rx="12"/>
+      <rect x="5" y="26" width="118" height="91" fill="#ECE9D8"/>
+      <g fill="none" stroke="#0054E3" stroke-linecap="round" stroke-width="3">
+        <path d="M24 92 Q64 46 104 92"/>
+        <path d="M20 102 L108 102"/>
+      </g>
+      <circle cx="64" cy="46" r="4" fill="#7FBA00"/>
+    </svg>
+
+    <h3 class="footer-title">SAZ Bridge</h3>
+    <p class="footer-desc" data-i18n="foot_desc">The Cloudflare Worker Subscription Manager. Fast, free, and beautiful.</p>
+
+    <div class="footer-links">
+      <a href="https://github.com/THE-SAZ/saz-bridge" target="_blank" rel="noopener">
+        <span>📦</span> GitHub Repo
+      </a>
+      <a href="https://github.com/THE-SAZ/saz-bridge/issues" target="_blank" rel="noopener">
+        <span>🐛</span> <span data-i18n="foot_issues">Report Issue</span>
+      </a>
+      <a href="https://github.com/THE-SAZ/saz-bridge/blob/main/docs/DEPLOY.md" target="_blank" rel="noopener">
+        <span>📘</span> <span data-i18n="foot_deploy">Deploy Guide</span>
+      </a>
+      <a href="https://github.com/THE-SAZ/saz-bridge/blob/main/LICENSE" target="_blank" rel="noopener">
+        <span>📜</span> MIT License
+      </a>
+    </div>
+
+    <div class="footer-credit">
+      <img src="https://github.com/THE-SAZ.png" alt="THE SAZ" loading="lazy"/>
+      <span data-i18n="foot_credit">Made with ❤️ by</span>
+      <a href="https://github.com/THE-SAZ" target="_blank" rel="noopener">THE SAZ</a>
+      <span>·</span>
+      <span>v0.0.7</span>
+      <span>·</span>
+      <span>© 2024</span>
+    </div>
+  </div>
+</footer>
+
+<button class="back-top" id="backTop" aria-label="Back to top">▲</button>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   SAZ Bridge Docs — Interactions
+   ═══════════════════════════════════════════════════════════════ */
+
+// ═══════════════════════════════════════
+//  I18N TRANSLATIONS
+// ═══════════════════════════════════════
+const I18N = {
+  fa: {
+    /* Nav */
+    nav_intro: 'معرفی',
+    nav_features: 'ویژگی‌ها',
+    nav_install: 'نصب',
+    nav_config: 'تنظیمات',
+    nav_sublink: 'ساب‌لینک',
+    nav_bot: 'ربات',
+    nav_api: 'API',
+    nav_faq: 'سوالات',
+    /* Hero */
+    hero_badge: 'پنل مدیریت ساب‌لینک روی Cloudflare Worker · نسخه ۰.۰.۷',
+    hero_title_1: 'پل ساز',
+    hero_title_2: 'پنل مدیریت ساب‌لینک نهایی',
+    hero_sub: 'کاربران را مدیریت کنید، ساب‌لینک‌های Base64 بسازید، ربات تلگرام یکپارچه کنید و از تجربه‌ی واقعی Windows XP لذت ببرید — همه روی شبکه‌ی لبه Cloudflare، کاملاً رایگان.',
+    hero_cta_start: 'شروع کنید',
+    hero_cta_github: 'مشاهده در گیت‌هاب',
+    hero_cta_api: 'مستندات API',
+    stat_version: 'نسخه',
+    stat_langs: 'زبان‌ها',
+    stat_clients: 'کلاینت‌ها',
+    stat_free: 'رایگان',
+    /* Sidebar */
+    sb_getting_started: 'شروع سریع',
+    sb_intro: 'معرفی',
+    sb_features: 'ویژگی‌ها',
+    sb_arch: 'معماری',
+    sb_install: 'نصب',
+    sb_setup: 'راه‌اندازی',
+    sb_guides: 'راهنماها',
+    sb_config: 'تنظیمات',
+    sb_users: 'مدیریت کاربران',
+    sb_sublink: 'مدیریت ساب‌لینک',
+    sb_groups: 'گروه‌ها',
+    sb_bot: 'ربات تلگرام',
+    sb_backup: 'پشتیبان‌گیری',
+    sb_reference: 'مرجع',
+    sb_clients: 'کلاینت‌ها',
+    sb_api: 'API',
+    sb_security: 'امنیت',
+    sb_faq: 'سوالات متداول',
+    sb_trouble: 'عیب‌یابی',
+    sb_contrib: 'مشارکت',
+    sb_license: 'مجوز',
+    /* Intro */
+    intro_title: 'SAZ Bridge چیست؟',
+    intro_desc: 'SAZ Bridge یک پنل مدیریت ساب‌لینک مدرن، سبک و کاملاً رایگان است که برای ارائه‌دهندگان V2Ray / Xray / Vmess / Vless ساخته شده.',
+    intro_p1: 'اگر سرورهای پروکسی دارید و می‌خواهید لینک‌های کانفیگ را به کاربران توزیع کنید، SAZ Bridge یک پلتفرم کامل و حرفه‌ای را بدون یک خط کد سمت سرور و بدون هیچ هزینه‌ی VPS یا هاستینگ در اختیار شما می‌گذارد.',
+    intro_p2: 'کل این پنل روی شبکه‌ی جهانی لبه Cloudflare اجرا می‌شود — بیش از ۳۰۰ نقطه‌ی جغرافیایی — و به کاربران شما تأخیر میلی‌ثانیه‌ای می‌دهد. تنظیمات، ذخیره‌سازی و مدیریت همه داخل یک Cloudflare Worker و فضای کلید-مقدار آن انجام می‌شود.',
+    intro_f1_t: 'بدون تنظیمات پیچیده',
+    intro_f1_d: 'بدون Secret، بدون متغیر محیطی. همه چیز در KV و از طریق ویزارد داخلی.',
+    intro_f2_t: 'شبکه‌ی جهانی',
+    intro_f2_d: 'روی لبه Cloudflare اجرا می‌شود — سریع‌ترین پاسخ برای هر کاربر در هر کجا.',
+    intro_f3_t: 'کاملاً رایگان',
+    intro_f3_d: 'پلن رایگان Cloudflare برای هزاران کاربر در روز کافی است.',
+    intro_f4_t: 'تم Windows XP',
+    intro_f4_d: 'تم نوستالژیک Luna با بهبودهای مدرن UX.',
+    intro_note_t: 'پلی بین گذشته و آینده',
+    intro_note_d: 'SAZ Bridge رویکرد مستحکم پنل‌های کلاسیک پروکسی را برای دوران Serverless مدرن بازآفرینی می‌کند.',
+    /* Features */
+    features_title: 'هر آنچه نیاز دارید',
+    features_desc: 'مجموعه‌ای دقیق از ویژگی‌ها که تمام جنبه‌های مدیریت ساب‌لینک را پوشش می‌دهد.',
+    feat_users_t: 'مدیریت کامل کاربران',
+    feat_users_d: 'ساخت، ویرایش و حذف کاربران با حجم و انقضای سفارشی. اتصال Chat ID تلگرام، تخصیص گروه و ردیابی مصرف.',
+    feat_subs_t: 'ساب‌منیجر پیشرفته',
+    feat_subs_d: 'ساخت لینک‌های ساب با نام، پیشوند و منابع چندگانه. گروه‌بندی و شمارش بازدید خودکار.',
+    feat_groups_t: 'سیستم گروه‌بندی',
+    feat_groups_d: 'سازمان‌دهی کاربران و ساب‌ها در گروه‌های رنگی برای مدیریت در مقیاس بزرگ.',
+    feat_bot_t: 'یکپارچه‌سازی ربات تلگرام',
+    feat_bot_d: 'تنظیم خودکار Webhook از پنل. کاربران می‌توانند لینک ساب، مصرف و اعلان‌ها را دریافت کنند.',
+    feat_qr_t: 'تولید QR Code',
+    feat_qr_d: 'تولید آنی QR Code برای هر لینک ساب — مناسب آنبوردینگ موبایل.',
+    feat_i18n_t: '۴ زبان',
+    feat_i18n_d: 'پشتیبانی کامل از فارسی (RTL)، انگلیسی، روسی و چینی. تشخیص خودکار زبان مرورگر.',
+    feat_sec_t: 'امنیت اول',
+    feat_sec_d: 'هش SHA-256، سشن ۲۴ ساعته، Cookie با HttpOnly + Secure + SameSite و اجباری بودن HTTPS.',
+    feat_backup_t: 'پشتیبان و بازیابی',
+    feat_backup_d: 'خروجی و ورودی JSON کامل. مهاجرت بین Workerها در چند ثانیه.',
+    feat_stats_t: 'داشبورد تحلیلی',
+    feat_stats_d: 'مشاهده کاربران برتر بر اساس مصرف، بازدید کل، توزیع گروه‌ها و بیشتر — به‌صورت زنده.',
+    feat_theme_t: 'تم Windows XP',
+    feat_theme_d: 'گرادیان آبی واقعی Luna، نوار عنوان براق، Start Menu فعال و Taskbar زنده.',
+    features_note_t: 'بدون وابستگی خارجی',
+    features_note_d: 'بدون پکیج npm، بدون مرحله Build، بدون نیاز به CDN — یک فایل _worker.js و یک KV کافی است.',
+    /* Architecture */
+    arch_title: 'چطور کار می‌کند',
+    arch_desc: 'SAZ Bridge از یک معماری Serverless مدرن با ردپای مینیمال استفاده می‌کند.',
+    arch_stack: 'نمای کلی فناوری',
+    arch_w_d: 'محیط اجرا — جاوااسکریپت Serverless روی لبه.',
+    arch_kv_d: 'ذخیره‌سازی سریع و توزیع‌شده‌ی کلید-مقدار برای تمام داده‌ها.',
+    arch_ui_d: 'بدون فریمورک، بدون Build — همه چیز در یک فایل.',
+    arch_routes: 'جریان درخواست',
+    arch_files: 'ساختار فایل‌ها',
+    arch_data: 'مدل داده',
+    arch_data_d: 'تمام داده‌ها در یک فضای KV به نام SUB_KV ذخیره می‌شوند:',
+    th_key: 'کلید',
+    th_value: 'نوع مقدار',
+    th_purpose: 'هدف',
+    td_config: 'تنظیمات کلی: هش رمز، مسیر ساب، تم، زبان، توکن ربات',
+    td_users: 'تمام رکوردهای کاربران با توکن، حجم، انقضا و لینک‌ها',
+    td_groups: 'گروه‌های رنگی برای سازماندهی کاربران و ساب‌ها',
+    td_subs: 'ساب‌لینک‌های سفارشی با منابع، پیشوند و بازدید',
+    td_session: 'سشن‌های فعال مدیر (TTL: ۲۴ ساعت)',
+    /* Install */
+    install_title: 'در ۵ دقیقه مستقر کنید',
+    install_desc: 'روش دلخواه خود را انتخاب کنید — داشبورد برای سادگی، Wrangler CLI برای کاربران حرفه‌ای.',
+    tab_dash: 'داشبورد',
+    tab_wrangler: 'Wrangler CLI',
+    tab_github: 'GitHub Actions',
+    st_dash_1_t: 'باز کردن داشبورد Cloudflare',
+    st_dash_1_d: 'به dash.cloudflare.com بروید و وارد شوید (یا حساب رایگان بسازید).',
+    st_dash_2_t: 'ساخت Worker',
+    st_dash_2_d: 'Workers & Pages → Create → Worker. نام: saz-bridge و روی Deploy کلیک کنید.',
+    st_dash_3_t: 'چسباندن کد',
+    st_dash_3_d: 'روی Edit code کلیک کنید، محتوای پیش‌فرض را پاک کنید و کد کامل _worker.js را جای‌گذاری کنید.',
+    st_dash_4_t: 'ساخت فضای KV',
+    st_dash_4_d: 'Workers & Pages → KV → Create namespace. نام: SUB_KV.',
+    st_dash_5_t: 'اتصال KV به Worker',
+    st_dash_5_d: 'در Worker → Settings → Variables → KV Namespace Bindings: نام متغیر: SUB_KV · فضای KV: SUB_KV',
+    st_dash_6_t: 'بازکردن آدرس Worker',
+    st_dash_6_d: 'آدرس https://saz-bridge.YOUR-SUBDOMAIN.workers.dev را باز کنید. Setup Wizard ظاهر می‌شود!',
+    st_dash_note_t: 'بدون نیاز به Secret',
+    st_dash_note_d: 'نیازی به اضافه کردن متغیر محیطی نیست. همه چیز از داخل پنل و در KV تنظیم می‌شود.',
+    st_wr_1_t: 'نصب پیش‌نیازها',
+    st_wr_1_d: 'Node.js 18+ و npm الزامی است.',
+    st_wr_2_t: 'کلون کردن مخزن',
+    st_wr_3_t: 'ساخت فضاهای KV',
+    st_wr_4_t: 'ویرایش wrangler.toml',
+    st_wr_5_t: 'استقرار',
+    gh_intro: 'برای استقرار خودکار در هر Push، از GitHub Actions استفاده کنید. فایل .github/workflows/deploy.yml را بسازید:',
+    gh_note_t: 'Secret های لازم',
+    gh_note_d: 'CF_API_TOKEN را در Secret های مخزن اضافه کنید. از Cloudflare Dashboard → My Profile → API Tokens با قالب "Edit Cloudflare Workers" بگیرید.',
+    /* Setup */
+    setup_title: 'پیکربندی اولین اجرا',
+    setup_desc: 'در اولین بازدید، SAZ Bridge یک ویزارد دوستانه برای تنظیم همه چیز نمایش می‌دهد.',
+    setup_p1: 'آدرس Worker خود را در مرورگر باز کنید. اگر تنظیماتی وجود نداشته باشد، Setup Wizard خودکار ظاهر می‌شود.',
+    setup_step_1: 'رمز عبور مدیر',
+    setup_step_1_d: 'یک رمز قوی انتخاب کنید (حداقل ۶ کاراکتر). به‌صورت هش SHA-256 ذخیره می‌شود.',
+    setup_step_2: 'مسیر ساب‌لینک',
+    setup_step_2_d: 'بخش URL برای لینک‌های ساب. پیش‌فرض sub. می‌توان برای امنیت تصادفی کرد.',
+    setup_step_3: 'زبان پیش‌فرض',
+    setup_step_3_d: 'زبانی که برای بازدیدکنندگان جدید نمایش داده می‌شود. با پارامتر URL ?lang=xx قابل تغییر است.',
+    setup_step_4: 'تم پنل',
+    setup_step_4_d: 'انتخاب بین تم‌های Luna Blue، Classic و Silver.',
+    setup_step_5: 'ربات تلگرام (اختیاری)',
+    setup_step_5_d: 'توکن ربات را وارد کنید تا یکپارچگی تلگرام فعال شود. بعداً هم قابل افزودن است.',
+    setup_step_6: 'پایان',
+    setup_step_6_d: 'روی Setup کلیک کنید — به‌طور خودکار وارد شده و به داشبورد هدایت می‌شوید.',
+    setup_reset_t: 'بازنشانی تنظیمات',
+    setup_reset_d: 'اگر می‌خواهید ویزارد را دوباره اجرا کنید، کلید config را از KV پاک کنید و صفحه را رفرش کنید.',
+    /* Config */
+    config_title: 'تنظیمات پنل',
+    config_desc: 'همه تنظیمات از تب Settings داخل پنل مدیریت می‌شود.',
+    th_setting: 'تنظیم',
+    th_default: 'پیش‌فرض',
+    th_desc: 'توضیح',
+    set_lang: 'زبان پیش‌فرض پنل. یکی از: fa، en، ru، zh.',
+    set_subpath: 'بخش URL برای ساب‌لینک. برای امنیت تصادفی نگه دارید.',
+    set_theme: 'تم ظاهری. یکی از: luna، classic، silver.',
+    set_ann: 'پیام کوتاهی که در خانه‌ی داشبورد نمایش داده می‌شود.',
+    set_bot: 'توکن ربات تلگرام از @BotFather.',
+    set_pass: 'هش SHA-256 رمز مدیر.',
+    config_path_t: 'انتخاب مسیر ساب امن',
+    config_path_d: 'از مسیرهای قابل حدس مانند sub یا link در محیط تولید پرهیز کنید. از رشته تصادفی مثل br-7k3p9x استفاده کنید.',
+    /* Users */
+    users_title: 'مدیریت کاربران',
+    users_desc: 'ساخت، ویرایش و رصد هر کاربر از یک داشبورد واحد.',
+    users_fields: 'فیلدهای کاربر',
+    th_field: 'فیلد',
+    th_type: 'نوع',
+    th_req: 'الزامی',
+    uf_name: 'نام نمایشی کاربر.',
+    uf_quota: 'محدودیت ترافیک به گیگابایت. 0 = نامحدود.',
+    uf_days: 'تعداد روز تا انقضا. 0 = بدون انقضا.',
+    uf_group: 'شناسه گروه برای سازماندهی.',
+    uf_tgid: 'Chat ID تلگرام برای یکپارچگی ربات.',
+    uf_links: 'هر خط یک لینک پروکسی: vmess://, vless://, و...',
+    users_status: 'وضعیت‌های کاربر',
+    us_active: 'فعال',
+    us_active_d: 'کاربر انقضای معتبر دارد و از حجم عبور نکرده.',
+    us_expired: 'منقضی',
+    us_expired_d: 'تاریخ انقضا گذشته. بازگشت ۴۰۳ با صفحه دوستانه.',
+    us_disabled: 'غیرفعال',
+    us_disabled_d: 'توسط مدیر به‌صورت دستی غیرفعال شده.',
+    users_actions: 'عملیات سریع',
+    ua_copy: 'کپی لینک ساب',
+    ua_qr: 'نمایش QR Code',
+    ua_edit: 'ویرایش',
+    ua_delete: 'حذف',
+    ua_search: 'جستجو',
+    /* Subs */
+    subs_title: 'مدیریت ساب‌لینک',
+    subs_desc: 'ساخت ساب‌های سفارشی که چندین کاربر را تحت یک URL تجمیع می‌کنند.',
+    subs_what: 'ساب‌لینک چیست؟',
+    subs_what_d: 'ساب‌لینک یک URL است که لیستی از لینک‌های پروکسی Base64 شده را برمی‌گرداند. کلاینت‌هایی مثل V2RayNG این URL را می‌خوانند و همه کانفیگ‌ها را اضافه می‌کنند.',
+    subs_url: 'قالب URL',
+    subs_types: 'دو نوع ساب‌لینک',
+    subs_user_t: 'ساب‌لینک کاربر',
+    subs_user_d: 'خودکار برای هر کاربر ساخته می‌شود. فقط لینک‌های خودش را دارد.',
+    subs_custom_t: 'ساب‌لینک سفارشی',
+    subs_custom_d: 'از Sub Manager ساخته می‌شود. چندین کاربر + لینک مستقیم. شمارنده بازدید دارد.',
+    subs_options: 'تنظیمات ساب‌لینک سفارشی',
+    th_option: 'تنظیم',
+    so_name: 'نام داخلی برای شناسایی.',
+    so_prefix: 'پیشوند آیکون/ایموجی در کلاینت‌ها.',
+    so_group: 'تخصیص به گروه برای سازماندهی.',
+    so_sources: 'آرایه‌ای از توکن کاربران برای کشیدن لینک‌ها.',
+    so_direct: 'لینک‌های اضافی مستقل.',
+    so_quota: 'محدودیت ترافیک کل ساب (0 = نامحدود).',
+    so_days: 'روز تا انقضای ساب.',
+    subs_response: 'قالب پاسخ',
+    subs_response_d: 'لینک‌ها با newline به هم متصل و Base64 می‌شوند:',
+    subs_headers_d: 'هدرهای پاسخ شامل متادیتای استاندارد ساب هستند:',
+    /* Groups */
+    groups_title: 'سازماندهی با گروه‌ها',
+    groups_desc: 'صدها کاربر و ساب را با گروه‌های رنگی مرتب نگه دارید.',
+    groups_p1: 'گروه‌ها به سازماندهی کاربران و ساب‌ها کمک می‌کنند. هر گروه نام، رنگ و کاربرد فیلتر/عملیات گروهی دارد.',
+    gr_color_t: 'رنگ‌های سفارشی',
+    gr_color_d: 'هر رنگ hex را برای تمایز بصری انتخاب کنید.',
+    gr_count_t: 'شمارنده‌ها',
+    gr_count_d: 'تعداد کاربران و ساب‌ها در هر گروه را فوری ببینید.',
+    gr_clean_t: 'حذف ایمن',
+    gr_clean_d: 'حذف گروه، اعضا را بدون از دست دادن داده جدا می‌کند.',
+    gr_examples: 'نمونه‌های کاربرد',
+    /* Bot */
+    bot_title: 'یکپارچه‌سازی تلگرام',
+    bot_desc: 'به کاربران اجازه دهید لینک ساب خود را مستقیم از تلگرام بگیرند.',
+    bot_setup: 'راه‌اندازی',
+    bot_st_1_t: 'صحبت با @BotFather',
+    bot_st_1_d: 'تلگرام را باز کنید، @BotFather را جستجو و /newbot ارسال کنید.',
+    bot_st_2_t: 'چسباندن توکن',
+    bot_st_2_d: 'در SAZ Bridge → تب Bot → توکن را جای‌گذاری و Connect Bot را بزنید.',
+    bot_st_3_t: 'اتصال کاربران',
+    bot_st_3_d: 'Chat ID هر کاربر را از @userinfobot بگیرید و در پروفایل وارد کنید.',
+    bot_st_4_t: 'تمام!',
+    bot_st_4_d: 'کاربران می‌توانند /start بفرستند و ساب، مصرف و بیشتر دریافت کنند.',
+    bot_cmds: 'دستورات موجود',
+    th_cmd: 'دستور',
+    bc_start: 'نمایش پیام خوش‌آمد با کیبورد Inline.',
+    bc_mysub: 'بازگرداندن URL ساب شخصی کاربر.',
+    bc_usage: 'نمایش مصرف با نوار پیشرفت.',
+    bc_help: 'نمایش همه دستورات.',
+    bot_broadcast_t: 'ارسال گروهی',
+    bot_broadcast_d: 'از تب Bot می‌توانید یک پیام برای همه کاربران متصل بفرستید.',
+    /* Backup */
+    backup_title: 'هرگز داده‌هایت را از دست نده',
+    backup_desc: 'همه چیز را JSON بگیر، بین Workerها مهاجرت کن، یا از نسخه قبلی بازیابی کن.',
+    backup_export: 'خروجی گرفتن',
+    backup_export_d: 'به Backup → Export JSON بروید. فایل saz-bridge-backup-YYYY-MM-DD.json دانلود می‌شود:',
+    backup_import: 'ورودی گرفتن',
+    backup_import_d: 'از Backup → Restore فایل JSON قبلی را انتخاب کنید. داده‌های فعلی بازنویسی می‌شوند — اول بکاپ بگیرید!',
+    backup_warn_t: 'ورودی همه چیز را بازنویسی می‌کند',
+    backup_warn_d: 'ورودی کاربران، گروه‌ها و ساب‌ها را جایگزین می‌کند. رمز عبور حفظ می‌شود.',
+    /* Clients */
+    clients_title: 'کلاینت‌های سازگار',
+    clients_desc: 'SAZ Bridge با هر کلاینت سازگار با ساب‌لینک کار می‌کند.',
+    cl_v2rayng: 'Menu → Subscription → Add URL. از فید Base64 و هدر Subscription-Userinfo پشتیبانی می‌کند.',
+    cl_nekobox: 'Groups → Add → URL. کاملاً از هدرها پشتیبانی می‌کند.',
+    cl_shadow: 'Home → Add → Subscribe. URL را جای‌گذاری و به‌روزرسانی خودکار را فعال کنید.',
+    cl_v2box: 'Subscriptions → + → URL را جای‌گذاری کنید.',
+    cl_clash: 'به‌عنوان proxy provider اضافه کنید. با User-Agent شناسایی و YAML برمی‌گردد.',
+    cl_v2rayn: 'Subscription → Subscription settings → Add.',
+    cl_singbox: 'پشتیبانی از outbound از راه دور — URL ساب را مستقیم اضافه کنید.',
+    cl_streisand: 'پشتیبانی کامل از ساب با هدر userinfo.',
+    /* API */
+    api_title: 'مستندات API',
+    api_desc: 'به‌صورت برنامه‌ریزی‌شده همه چیز را از طریق JSON مدیریت کنید.',
+    api_auth_t: 'احراز هویت',
+    api_auth_d: 'تمام اندپوینت‌ها به Cookie session معتبر نیاز دارند. با POST به /login و رمز مدیر آن را بگیرید.',
+    api_auth: 'احراز هویت',
+    api_login_d: 'ورود با رمز مدیر. روی موفقیت، Cookie سشن تنظیم می‌کند.',
+    api_logout_d: 'سشن را نابود و به صفحه ورود ریدایرکت می‌کند.',
+    api_users: 'کاربران',
+    api_user_create: 'ساخت کاربر جدید. توکن ساخته‌شده را برمی‌گرداند.',
+    api_user_update: 'به‌روزرسانی کاربر موجود. همه فیلدها اختیاری هستند.',
+    api_user_delete: 'حذف دائمی کاربر.',
+    api_subs: 'ساب‌لینک‌ها',
+    api_sub_create: 'ساخت ساب‌لینک سفارشی.',
+    api_sub_update: 'به‌روزرسانی ساب‌لینک.',
+    api_sub_delete: 'حذف ساب‌لینک.',
+    api_groups: 'گروه‌ها',
+    api_group_delete: 'حذف گروه و جدا کردن اعضا.',
+    api_config: 'تنظیمات',
+    api_config_get: 'دریافت تنظیمات فعلی (بدون هش رمز و توکن ربات).',
+    api_config_post: 'به‌روزرسانی تنظیمات.',
+    api_bot: 'ربات',
+    api_bot_set: 'ثبت Webhook تلگرام.',
+    api_bot_unset: 'حذف Webhook.',
+    api_bot_broadcast: 'ارسال پیام به همه کاربران متصل.',
+    api_backup: 'پشتیبان',
+    api_backup_get: 'دانلود پشتیبان کامل به‌صورت JSON.',
+    api_restore_post: 'بازیابی از JSON. داده‌های موجود بازنویسی می‌شود.',
+    api_sub_feed: 'فید ساب‌لینک',
+    api_feed_d: 'بازگشت ساب Base64. Content-Type بر اساس User-Agent (text/yaml برای Clash).',
+    api_webhook: 'Webhook تلگرام',
+    api_webhook_d: 'توسط تلگرام فراخوانی می‌شود. برای استفاده مستقیم نیست.',
+    /* Security */
+    sec_title: 'امنیت داخلی',
+    sec_desc: 'SAZ Bridge از بهترین شیوه‌های امنیتی مدرن پیروی می‌کند.',
+    sec_hash_t: 'هش SHA-256',
+    sec_hash_d: 'رمزها هرگز به‌صورت plain text ذخیره نمی‌شوند. فقط هش salted.',
+    sec_ttl_t: 'سشن ۲۴ ساعته',
+    sec_ttl_d: 'سشن‌ها پس از ۲۴ ساعت خودکار منقضی می‌شوند.',
+    sec_cookies_t: 'Cookie های سخت‌شده',
+    sec_cookies_d: 'HttpOnly + Secure + SameSite=Lax — جاوااسکریپت نمی‌تواند بخواند.',
+    sec_https_t: 'HTTPS اجباری',
+    sec_https_d: 'Cloudflare به‌طور خودکار HTTPS با HTTP/3 و TLS 1.3 می‌دهد.',
+    sec_sanitize_t: 'پاکسازی ورودی',
+    sec_sanitize_d: 'تمام ورودی‌ها اعتبارسنجی و escape می‌شوند تا از XSS جلوگیری شود.',
+    sec_ratelimit_t: 'آماده Rate Limiting',
+    sec_ratelimit_d: 'قوانین Rate Limit را برای جلوگیری از حملات Brute-force فعال کنید.',
+    sec_recommend: 'توصیه‌های کاربردی',
+    sec_r1: 'از رمز قوی استفاده کنید (۱۲+ کاراکتر، ترکیب حروف، اعداد، نمادها).',
+    sec_r2: 'مسیر ساب را تصادفی کنید (از sub یا link پرهیز کنید).',
+    sec_r3: 'در صورت امکان Cloudflare Access را برای /admin فعال کنید.',
+    sec_r4: 'رمز مدیر را هر چند ماه تغییر دهید.',
+    sec_r5: 'بکاپ JSON منظم بگیرید.',
+    /* FAQ */
+    faq_title: 'سوالات متداول',
+    faq_desc: 'پاسخ به رایج‌ترین سوالات.',
+    faq_q1: 'آیا به VPS یا هاست نیاز دارم؟',
+    faq_a1: 'خیر! SAZ Bridge کاملاً روی Cloudflare Workers اجرا می‌شود که پلن رایگان دارد.',
+    faq_q2: 'محدودیت پلن رایگان چقدر است؟',
+    faq_a2: 'پلن رایگان Workers: ۱۰۰,۰۰۰ درخواست در روز. KV: ۱۰۰,۰۰۰ خواندن + ۱,۰۰۰ نوشتن در روز.',
+    faq_q3: 'کاربران چگونه به ربات تلگرام وصل می‌شوند؟',
+    faq_a3: 'Chat ID هر کاربر را از @userinfobot بگیرید و در پنل وارد کنید.',
+    faq_q4: 'با Clash / Mihomo کار می‌کند؟',
+    faq_a4: 'بله. تشخیص خودکار User-Agent و بازگشت با Content-Type: text/yaml.',
+    faq_q5: 'چطور از داده‌ها بکاپ بگیرم؟',
+    faq_a5: 'پنل → Start Menu → Backup → Export JSON.',
+    faq_q6: 'می‌توانم از دامنه اختصاصی استفاده کنم؟',
+    faq_a6: 'بله. در Cloudflare Dashboard → Worker → Settings → Domains & Routes دامنه را اضافه کنید.',
+    faq_q7: 'چه پروتکل‌های پروکسی پشتیبانی می‌شوند؟',
+    faq_a7: 'VMess, VLESS, Trojan, Shadowsocks, SSR, Hysteria, Hysteria2, TUIC, SOCKS, WireGuard.',
+    faq_q8: 'آیا داده‌هایم امن است؟',
+    faq_a8: 'بله. داده‌ها فقط در KV خودتان است. رمزها SHA-256 هش می‌شوند.',
+    faq_q9: 'می‌توانم زبان بیشتری اضافه کنم؟',
+    faq_a9: 'بله — راهنمای i18n در docs/LANGUAGES.md.',
+    faq_q10: 'چطور SAZ Bridge را به‌روزرسانی کنم؟',
+    faq_a10: 'git pull origin main سپس wrangler deploy. داده‌ها در KV حفظ می‌شوند.',
+    /* Troubleshoot */
+    tr_title: 'مشکلات رایج',
+    tr_desc: 'راه‌حل مشکلاتی که کاربران زیاد با آن مواجه می‌شوند.',
+    tr_q1: 'صفحه سفید',
+    tr_a1: 'Cause: خطای JS یا نبود KV Binding. Fix: F12 → Console. بررسی SUB_KV. رفرش سخت (Ctrl+Shift+R).',
+    tr_q2: 'ساب‌لینک خالی برمی‌گردد',
+    tr_a2: 'Cause: لینک پروکسی معتبری در کاربر نیست. Fix: کاربر را ویرایش و لینک vmess/vless/trojan/ss اضافه کنید.',
+    tr_q3: 'ربات تلگرام پاسخ نمی‌دهد',
+    tr_a3: 'Cause: Webhook تنظیم نشده. Fix: تب Bot → توکن → Connect Bot.',
+    tr_q4: 'محدودیت نوشتن KV رد شد',
+    tr_a4: 'Cause: پلن رایگان ۱,۰۰۰ نوشتن در روز. Fix: کاهش فرکانس به‌روزرسانی یا ارتقای پلن.',
+    tr_q5: 'رمز عبور اشتباه',
+    tr_a5: 'Fix: کلید config را از KV پاک کنید. صفحه را رفرش کنید — Setup Wizard ظاهر می‌شود.',
+    tr_q6: 'کلاینت "پشتیبانی نمی‌شود" می‌دهد',
+    tr_a6: 'Cause: کلاینت نمی‌تواند بعضی لینک‌ها را پارس کند. Fix: قالب لینک‌ها را بررسی کنید.',
+    /* Contributing */
+    con_title: 'به پروژه بپیوندید',
+    con_desc: 'مشارکت‌ها از هر نوعی خوش‌آمدند — کد، مستندات، ترجمه، گزارش باگ.',
+    con_flow: 'روند مشارکت',
+    con_step_1: 'فورک کردن مخزن',
+    con_step_1_d: 'روی دکمه Fork در GitHub کلیک و فورک خود را کلون کنید.',
+    con_step_2: 'ساخت شاخه',
+    con_step_3: 'کامیت تغییرات',
+    con_step_4: 'Push و باز کردن PR',
+    con_ideas: 'ایده‌های مشارکت',
+    con_i1: 'افزودن زبان جدید به آبجکت I18N.',
+    con_i2: 'بهبود دسترس‌پذیری رابط.',
+    con_i3: 'افزودن پیش‌تنظیم کلاینت جدید.',
+    con_i4: 'نوشتن تست برای اندپوینت‌های API.',
+    con_i5: 'بهبود مستندات.',
+    con_i6: 'افزودن خروجی به قالب Clash YAML.',
+    /* License */
+    lic_title: 'مجوز MIT',
+    lic_p1: 'SAZ Bridge تحت مجوز MIT منتشر شده است. می‌توانید تجاری استفاده کنید، تغییر دهید و توزیع کنید.',
+    /* Footer */
+    foot_desc: 'پنل مدیریت ساب‌لینک روی Cloudflare Worker. سریع، رایگان و زیبا.',
+    foot_issues: 'گزارش مشکل',
+    foot_deploy: 'راهنمای استقرار',
+    foot_credit: 'ساخته شده با ❤️ توسط'
+  },
+
+  en: {
+    nav_intro: 'Intro',
+    nav_features: 'Features',
+    nav_install: 'Install',
+    nav_config: 'Config',
+    nav_sublink: 'Subscriptions',
+    nav_bot: 'Bot',
+    nav_api: 'API',
+    nav_faq: 'FAQ',
+    hero_badge: 'Cloudflare Worker Subscription Manager · v0.0.7',
+    hero_title_1: 'SAZ Bridge',
+    hero_title_2: 'The Ultimate Subscription Manager',
+    hero_sub: 'Manage users, create Base64 subscriptions, integrate Telegram bots, and enjoy the authentic Windows XP experience — all on Cloudflare\'s edge network, completely free.',
+    hero_cta_start: 'Get Started',
+    hero_cta_github: 'View on GitHub',
+    hero_cta_api: 'API Docs',
+    stat_version: 'Version',
+    stat_langs: 'Languages',
+    stat_clients: 'Clients',
+    stat_free: 'Free',
+    sb_getting_started: 'Getting Started',
+    sb_intro: 'Introduction',
+    sb_features: 'Features',
+    sb_arch: 'Architecture',
+    sb_install: 'Installation',
+    sb_setup: 'Setup Wizard',
+    sb_guides: 'Guides',
+    sb_config: 'Configuration',
+    sb_users: 'User Management',
+    sb_sublink: 'Subscription Manager',
+    sb_groups: 'Groups',
+    sb_bot: 'Telegram Bot',
+    sb_backup: 'Backup & Restore',
+    sb_reference: 'Reference',
+    sb_clients: 'Client Setup',
+    sb_api: 'API Reference',
+    sb_security: 'Security',
+    sb_faq: 'FAQ',
+    sb_trouble: 'Troubleshooting',
+    sb_contrib: 'Contributing',
+    sb_license: 'License',
+    intro_title: 'What is SAZ Bridge?',
+    intro_desc: 'SAZ Bridge is a modern, lightweight, and entirely free subscription management panel for V2Ray / Xray / Vmess / Vless providers, built on Cloudflare Workers.',
+    intro_p1: 'If you\'re running proxy servers and need to distribute configuration links to users, SAZ Bridge gives you a complete, professional-grade management platform without a single line of backend code and without any VPS or hosting fees.',
+    intro_p2: 'It runs entirely on Cloudflare\'s global edge network — 300+ locations worldwide — giving your users millisecond latency no matter where they are.',
+    intro_f1_t: 'Zero Configuration',
+    intro_f1_d: 'No secrets, no environment variables. Everything lives in KV and is set up via the built-in wizard.',
+    intro_f2_t: 'Global Network',
+    intro_f2_d: 'Runs on Cloudflare\'s edge — fastest response for every user around the world.',
+    intro_f3_t: 'Completely Free',
+    intro_f3_d: 'The Cloudflare free tier is more than enough for thousands of users per day.',
+    intro_f4_t: 'Windows XP Theme',
+    intro_f4_d: 'Nostalgic Luna theme for the admin panel, with modern UX improvements.',
+    intro_note_t: 'A Bridge Between Old & New',
+    intro_note_d: 'SAZ Bridge takes the robust, well-tested approach of classic proxy panel software and modernizes it for the serverless era.',
+    features_title: 'Everything you need',
+    features_desc: 'A carefully designed set of features covering every aspect of subscription management.',
+    feat_users_t: 'Complete User Management',
+    feat_users_d: 'Create, edit, and delete users with custom quota (GB) and expiry (days).',
+    feat_subs_t: 'Advanced Sub Manager',
+    feat_subs_d: 'Build subscription links with custom names, prefixes, and multi-source aggregation.',
+    feat_groups_t: 'Grouping System',
+    feat_groups_d: 'Organize users and subscriptions into color-coded groups.',
+    feat_bot_t: 'Telegram Bot Integration',
+    feat_bot_d: 'Auto-configure webhooks from the panel. Users can retrieve their subscription link instantly.',
+    feat_qr_t: 'QR Code Generator',
+    feat_qr_d: 'Instantly generate QR codes for any subscription URL.',
+    feat_i18n_t: '4 Languages',
+    feat_i18n_d: 'Full support for Persian (RTL), English, Russian, and Chinese.',
+    feat_sec_t: 'Security First',
+    feat_sec_d: 'SHA-256 password hashing, 24-hour sessions, hardened cookies, and HTTPS.',
+    feat_backup_t: 'Backup & Restore',
+    feat_backup_d: 'Full JSON export and import. Migrate between workers in seconds.',
+    feat_stats_t: 'Analytics Dashboard',
+    feat_stats_d: 'See top users by traffic, total visits, per-group distribution, and more.',
+    feat_theme_t: 'Windows XP Theme',
+    feat_theme_d: 'Authentic Luna blue gradients, glossy title bars, working Start Menu.',
+    features_note_t: 'Zero External Dependencies',
+    features_note_d: 'No npm packages, no build step, no CDN — a single _worker.js and one KV namespace.',
+    arch_title: 'How it works',
+    arch_desc: 'SAZ Bridge uses a modern serverless architecture with a minimal footprint.',
+    arch_stack: 'Stack Overview',
+    arch_w_d: 'Runtime environment — serverless JavaScript at the edge.',
+    arch_kv_d: 'Fast, globally-distributed key-value storage for all data.',
+    arch_ui_d: 'No framework, no build step — everything in a single file.',
+    arch_routes: 'Request Flow',
+    arch_files: 'File Structure',
+    arch_data: 'Data Model',
+    arch_data_d: 'All data is stored in a single KV namespace (SUB_KV) under these keys:',
+    th_key: 'Key',
+    th_value: 'Value Type',
+    th_purpose: 'Purpose',
+    td_config: 'Global settings: password hash, sub path, theme, language, bot token',
+    td_users: 'All user records with tokens, quota, expiry, links',
+    td_groups: 'Color-coded groups for organizing users and subs',
+    td_subs: 'Custom subscription links with sources, prefix, visits',
+    td_session: 'Active admin sessions (TTL: 24h)',
+    install_title: 'Deploy in 5 minutes',
+    install_desc: 'Choose your preferred method — Dashboard for simplicity, Wrangler CLI for power users.',
+    tab_dash: 'Dashboard',
+    tab_wrangler: 'Wrangler CLI',
+    tab_github: 'GitHub Actions',
+    st_dash_1_t: 'Open Cloudflare Dashboard',
+    st_dash_1_d: 'Navigate to dash.cloudflare.com and sign in (or create a free account).',
+    st_dash_2_t: 'Create a Worker',
+    st_dash_2_d: 'Go to Workers & Pages → Create → Worker. Name it saz-bridge and click Deploy.',
+    st_dash_3_t: 'Paste the Code',
+    st_dash_3_d: 'Click Edit code, delete the default content, and paste the full _worker.js.',
+    st_dash_4_t: 'Create a KV Namespace',
+    st_dash_4_d: 'Go to Workers & Pages → KV → Create namespace. Name it SUB_KV.',
+    st_dash_5_t: 'Bind KV to Worker',
+    st_dash_5_d: 'In your worker → Settings → Variables → KV Namespace Bindings: Variable name: SUB_KV · KV namespace: SUB_KV',
+    st_dash_6_t: 'Visit your Worker URL',
+    st_dash_6_d: 'Open https://saz-bridge.YOUR-SUBDOMAIN.workers.dev. The Setup Wizard appears!',
+    st_dash_note_t: 'Zero secrets required',
+    st_dash_note_d: 'You don\'t need to add any environment variables. Every setting is configured inside the panel and stored in KV.',
+    st_wr_1_t: 'Install prerequisites',
+    st_wr_1_d: 'Node.js 18+ and npm are required.',
+    st_wr_2_t: 'Clone the repository',
+    st_wr_3_t: 'Create KV namespaces',
+    st_wr_4_t: 'Edit wrangler.toml',
+    st_wr_5_t: 'Deploy',
+    gh_intro: 'For automated deployments on every push, use GitHub Actions. Create .github/workflows/deploy.yml:',
+    gh_note_t: 'Required Secrets',
+    gh_note_d: 'Add CF_API_TOKEN in your repository secrets. Get it from Cloudflare Dashboard → My Profile → API Tokens with "Edit Cloudflare Workers" template.',
+    setup_title: 'First-run configuration',
+    setup_desc: 'On the very first visit, SAZ Bridge guides you through a friendly wizard.',
+    setup_p1: 'Open your worker URL in a browser. The Setup Wizard automatically appears if no configuration exists.',
+    setup_step_1: 'Admin Password',
+    setup_step_1_d: 'Choose a strong password (min. 6 chars). It\'s stored as a SHA-256 hash.',
+    setup_step_2: 'Subscription Path',
+    setup_step_2_d: 'The URL segment for subscription links. Default sub. Can be randomized.',
+    setup_step_3: 'Default Language',
+    setup_step_3_d: 'The language shown to new visitors. Overridable with ?lang=xx.',
+    setup_step_4: 'Panel Theme',
+    setup_step_4_d: 'Choose between Luna Blue, Classic, and Silver themes.',
+    setup_step_5: 'Telegram Bot (optional)',
+    setup_step_5_d: 'Paste your bot token to enable Telegram integration. Can be added later.',
+    setup_step_6: 'Finish',
+    setup_step_6_d: 'Click Setup — you\'re automatically logged in and taken to the dashboard.',
+    setup_reset_t: 'Resetting Setup',
+    setup_reset_d: 'To re-run the wizard, delete the config key from KV and reload the page.',
+    config_title: 'Panel Settings',
+    config_desc: 'All settings are managed from the Settings tab inside the admin panel.',
+    th_setting: 'Setting',
+    th_default: 'Default',
+    th_desc: 'Description',
+    set_lang: 'The default panel language. One of: fa, en, ru, zh.',
+    set_subpath: 'URL segment used for subscription feeds. Keep it random for security.',
+    set_theme: 'Visual theme. One of: luna, classic, silver.',
+    set_ann: 'A short message shown on the dashboard home. Max 500 characters.',
+    set_bot: 'Telegram bot token from @BotFather.',
+    set_pass: 'SHA-256 hash of the admin password.',
+    config_path_t: 'Choosing a Secure Sub Path',
+    config_path_d: 'Avoid guessable paths like sub or link in production. Use a random string such as br-7k3p9x.',
+    users_title: 'Managing users',
+    users_desc: 'Create, edit, and monitor every user from a single dashboard.',
+    users_fields: 'User fields',
+    th_field: 'Field',
+    th_type: 'Type',
+    th_req: 'Required',
+    uf_name: 'Display name for the user.',
+    uf_quota: 'Traffic limit in gigabytes. 0 means unlimited.',
+    uf_days: 'Number of days until expiry. 0 means no expiry.',
+    uf_group: 'Group ID for organization.',
+    uf_tgid: 'Telegram Chat ID for bot integration.',
+    uf_links: 'One proxy link per line: vmess://, vless://, etc.',
+    users_status: 'User statuses',
+    us_active: 'Active',
+    us_active_d: 'User has valid expiry and hasn\'t exceeded quota.',
+    us_expired: 'Expired',
+    us_expired_d: 'Expiry date has passed. Subscription feed returns 403.',
+    us_disabled: 'Disabled',
+    us_disabled_d: 'Manually disabled by admin. All access blocked.',
+    users_actions: 'Quick actions',
+    ua_copy: 'Copy subscription link',
+    ua_qr: 'Show QR code',
+    ua_edit: 'Edit',
+    ua_delete: 'Delete',
+    ua_search: 'Search',
+    subs_title: 'Subscription Manager',
+    subs_desc: 'Build custom subscriptions that aggregate multiple users\' links under one URL.',
+    subs_what: 'What is a subscription?',
+    subs_what_d: 'A subscription is a single URL that returns a Base64-encoded list of proxy links.',
+    subs_url: 'URL format',
+    subs_types: 'Two kinds of subscriptions',
+    subs_user_t: 'User Subscription',
+    subs_user_d: 'Automatically created for every user. Uses their individual token.',
+    subs_custom_t: 'Custom Subscription',
+    subs_custom_d: 'Built from the Sub Manager. Combines multiple users\' links + direct links.',
+    subs_options: 'Custom subscription options',
+    th_option: 'Option',
+    so_name: 'Internal name for identification.',
+    so_prefix: 'Icon/emoji prefix shown in clients.',
+    so_group: 'Assign to a group for organization.',
+    so_sources: 'Array of user tokens to pull links from.',
+    so_direct: 'Additional links not tied to any user.',
+    so_quota: 'Total traffic limit (0 = unlimited).',
+    so_days: 'Days until subscription expires.',
+    subs_response: 'Response format',
+    subs_response_d: 'The subscription endpoint returns links joined by newlines, encoded as Base64:',
+    subs_headers_d: 'Response headers include standard subscription metadata:',
+    groups_title: 'Organizing with Groups',
+    groups_desc: 'Keep hundreds of users and subscriptions tidy with color-coded groups.',
+    groups_p1: 'Groups help you organize both users and subscriptions. Each group has a name, a color, and can be used for filtering and reporting.',
+    gr_color_t: 'Custom Colors',
+    gr_color_d: 'Pick any hex color to visually distinguish groups.',
+    gr_count_t: 'Count Indicators',
+    gr_count_d: 'See user and subscription counts per group instantly.',
+    gr_clean_t: 'Safe Deletion',
+    gr_clean_d: 'Deleting a group automatically detaches its members without data loss.',
+    gr_examples: 'Example use cases',
+    bot_title: 'Telegram Integration',
+    bot_desc: 'Let your users retrieve their subscription link directly from Telegram.',
+    bot_setup: 'Setup',
+    bot_st_1_t: 'Talk to @BotFather',
+    bot_st_1_d: 'Open Telegram, search for @BotFather, and send /newbot.',
+    bot_st_2_t: 'Paste token in the panel',
+    bot_st_2_d: 'In SAZ Bridge → Bot tab → paste token and click Connect Bot.',
+    bot_st_3_t: 'Link users to Telegram',
+    bot_st_3_d: 'Get each user\'s Chat ID from @userinfobot and enter it in their user record.',
+    bot_st_4_t: 'Done!',
+    bot_st_4_d: 'Users can now send /start to the bot and get their subscription.',
+    bot_cmds: 'Available commands',
+    th_cmd: 'Command',
+    bc_start: 'Show welcome message with inline keyboard.',
+    bc_mysub: 'Return the user\'s personal subscription URL.',
+    bc_usage: 'Display traffic usage with a progress bar.',
+    bc_help: 'Show all available commands.',
+    bot_broadcast_t: 'Broadcast',
+    bot_broadcast_d: 'From the Bot tab, you can send a message to all linked users at once.',
+    backup_title: 'Never lose your data',
+    backup_desc: 'Export everything as JSON, migrate between workers, or restore from a previous snapshot.',
+    backup_export: 'Exporting',
+    backup_export_d: 'Navigate to Backup → Export JSON. A file named saz-bridge-backup-YYYY-MM-DD.json is downloaded:',
+    backup_import: 'Importing',
+    backup_import_d: 'Use Backup → Restore and select a previously-exported JSON file. Make a fresh backup first!',
+    backup_warn_t: 'Import overwrites everything',
+    backup_warn_d: 'Import replaces users, groups, and subscriptions entirely. The admin password is preserved.',
+    clients_title: 'Compatible Clients',
+    clients_desc: 'SAZ Bridge works with every major subscription-compatible client out of the box.',
+    cl_v2rayng: 'Menu → Subscription group settings → Add URL.',
+    cl_nekobox: 'Groups → Add → URL. Full header support.',
+    cl_shadow: 'Home → Add → Subscribe. Paste URL and enable auto-update.',
+    cl_v2box: 'Subscriptions → + → paste URL.',
+    cl_clash: 'Add as proxy provider. Auto-detected and returned as YAML.',
+    cl_v2rayn: 'Subscription → Subscription settings → Add.',
+    cl_singbox: 'Remote outbound support — add the subscription URL directly.',
+    cl_streisand: 'Full subscription support with userinfo header parsing.',
+    api_title: 'API Reference',
+    api_desc: 'Programmatically manage everything through JSON endpoints.',
+    api_auth_t: 'Authentication',
+    api_auth_d: 'All endpoints require a valid session cookie. Obtain it by POSTing to /login.',
+    api_auth: 'Authentication',
+    api_login_d: 'Authenticates with the admin password. Sets a session cookie on success.',
+    api_logout_d: 'Destroys the session and redirects to login.',
+    api_users: 'Users',
+    api_user_create: 'Create a new user. Returns the generated token.',
+    api_user_update: 'Update an existing user. All fields are optional.',
+    api_user_delete: 'Delete a user permanently.',
+    api_subs: 'Subscriptions',
+    api_sub_create: 'Create a custom subscription.',
+    api_sub_update: 'Update a subscription.',
+    api_sub_delete: 'Delete a subscription.',
+    api_groups: 'Groups',
+    api_group_delete: 'Delete a group and detach its members.',
+    api_config: 'Configuration',
+    api_config_get: 'Get current configuration (password hash and bot token removed).',
+    api_config_post: 'Update configuration.',
+    api_bot: 'Bot',
+    api_bot_set: 'Register the Telegram webhook.',
+    api_bot_unset: 'Remove the webhook.',
+    api_bot_broadcast: 'Send a message to all linked users.',
+    api_backup: 'Backup',
+    api_backup_get: 'Download full backup as JSON.',
+    api_restore_post: 'Restore from a backup JSON. Overwrites existing data.',
+    api_sub_feed: 'Subscription Feed',
+    api_feed_d: 'Returns Base64-encoded subscription. Content-Type varies by User-Agent.',
+    api_webhook: 'Telegram Webhook',
+    api_webhook_d: 'Called by Telegram for incoming updates. Not intended for direct use.',
+    sec_title: 'Built-in Security',
+    sec_desc: 'SAZ Bridge follows modern security best practices out of the box.',
+    sec_hash_t: 'SHA-256 Password Hashing',
+    sec_hash_d: 'Passwords are never stored in plain text. Only a salted SHA-256 hash.',
+    sec_ttl_t: '24-Hour Sessions',
+    sec_ttl_d: 'Sessions automatically expire after 24 hours.',
+    sec_cookies_t: 'Hardened Cookies',
+    sec_cookies_d: 'HttpOnly + Secure + SameSite=Lax — the browser can\'t read them from JavaScript.',
+    sec_https_t: 'HTTPS Enforced',
+    sec_https_d: 'Cloudflare provides automatic HTTPS with HTTP/3 and TLS 1.3.',
+    sec_sanitize_t: 'Input Sanitization',
+    sec_sanitize_d: 'All user input is validated and escaped to prevent XSS and injection.',
+    sec_ratelimit_t: 'Rate Limiting Ready',
+    sec_ratelimit_d: 'Enable Cloudflare\'s rate limiting rules to prevent brute-force attacks.',
+    sec_recommend: 'Recommended practices',
+    sec_r1: 'Use a strong password (12+ chars, mix of cases, digits, symbols).',
+    sec_r2: 'Randomize subPath (avoid sub or link).',
+    sec_r3: 'Enable Cloudflare Access for /admin if possible.',
+    sec_r4: 'Rotate the admin password every few months.',
+    sec_r5: 'Take regular JSON backups.',
+    faq_title: 'Frequently Asked Questions',
+    faq_desc: 'Answers to the most common questions.',
+    faq_q1: 'Do I need a VPS or hosting?',
+    faq_a1: 'No! SAZ Bridge runs entirely on Cloudflare Workers, which has a generous free tier.',
+    faq_q2: 'What are the free tier limits?',
+    faq_a2: 'Workers: 100,000 requests/day. KV: 100,000 reads + 1,000 writes/day.',
+    faq_q3: 'How do users connect to the Telegram bot?',
+    faq_a3: 'Get each user\'s Chat ID from @userinfobot and enter it in the panel.',
+    faq_q4: 'Does it work with Clash / Mihomo?',
+    faq_a4: 'Yes. SAZ Bridge detects Clash/Mihomo by User-Agent and returns YAML content type.',
+    faq_q5: 'How do I backup my data?',
+    faq_a5: 'Panel → Start Menu → Backup → Export JSON.',
+    faq_q6: 'Can I use a custom domain?',
+    faq_a6: 'Yes. In Cloudflare Dashboard → Worker → Settings → Domains & Routes.',
+    faq_q7: 'What proxy protocols are supported?',
+    faq_a7: 'VMess, VLESS, Trojan, Shadowsocks, SSR, Hysteria, Hysteria2, TUIC, SOCKS, WireGuard.',
+    faq_q8: 'Is my data safe?',
+    faq_a8: 'Yes. Data lives only in your own Cloudflare KV namespace. Passwords are SHA-256 hashed.',
+    faq_q9: 'Can I add more languages?',
+    faq_a9: 'Yes — see docs/LANGUAGES.md for the i18n guide.',
+    faq_q10: 'How do I update SAZ Bridge?',
+    faq_a10: 'git pull origin main then wrangler deploy. Your data in KV remains untouched.',
+    tr_title: 'Common Issues',
+    tr_desc: 'Solutions to problems users frequently encounter.',
+    tr_q1: 'White screen or blank page',
+    tr_a1: 'Cause: JavaScript error or missing KV binding. Fix: Open F12 Console, check SUB_KV binding.',
+    tr_q2: 'Subscription returns empty content',
+    tr_a2: 'Cause: No valid proxy links. Fix: Edit user and add at least one valid link.',
+    tr_q3: 'Telegram bot doesn\'t respond',
+    tr_a3: 'Cause: Webhook not set. Fix: Bot tab → paste token → Connect Bot.',
+    tr_q4: 'KV write limit exceeded',
+    tr_a4: 'Cause: Free tier provides only 1,000 writes/day. Fix: reduce frequency or upgrade.',
+    tr_q5: 'Can\'t log in — password wrong',
+    tr_a5: 'Fix: Delete the config key from KV. Reload — Setup Wizard appears.',
+    tr_q6: 'Client shows "unsupported" error',
+    tr_a6: 'Cause: Client can\'t parse some links. Fix: Verify link formatting.',
+    con_title: 'Join the Project',
+    con_desc: 'Contributions of all kinds are welcome — code, docs, translations, bug reports.',
+    con_flow: 'Contribution flow',
+    con_step_1: 'Fork the repository',
+    con_step_1_d: 'Click the Fork button on GitHub and clone your fork.',
+    con_step_2: 'Create a branch',
+    con_step_3: 'Commit your changes',
+    con_step_4: 'Push & open a PR',
+    con_ideas: 'Ideas for contributions',
+    con_i1: 'Add a new language to the I18N object.',
+    con_i2: 'Improve UI accessibility.',
+    con_i3: 'Add a new client profile preset.',
+    con_i4: 'Write tests for the API endpoints.',
+    con_i5: 'Improve the documentation.',
+    con_i6: 'Add export to Clash YAML format.',
+    lic_title: 'MIT License',
+    lic_p1: 'SAZ Bridge is released under the permissive MIT License. You\'re free to use it commercially, modify it, and distribute it.',
+    foot_desc: 'The Cloudflare Worker Subscription Manager. Fast, free, and beautiful.',
+    foot_issues: 'Report Issue',
+    foot_deploy: 'Deploy Guide',
+    foot_credit: 'Made with ❤️ by'
+  },
+
+  ru: {
+    nav_intro: 'Введение',
+    nav_features: 'Возможности',
+    nav_install: 'Установка',
+    nav_config: 'Настройки',
+    nav_sublink: 'Подписки',
+    nav_bot: 'Бот',
+    nav_api: 'API',
+    nav_faq: 'FAQ',
+    hero_badge: 'Менеджер подписок Cloudflare Worker · v0.0.7',
+    hero_title_1: 'SAZ Bridge',
+    hero_title_2: 'Идеальный менеджер подписок',
+    hero_sub: 'Управляйте пользователями, создавайте Base64-подписки, интегрируйте Telegram-бота и наслаждайтесь аутентичным Windows XP — всё на граничной сети Cloudflare, абсолютно бесплатно.',
+    hero_cta_start: 'Начать',
+    hero_cta_github: 'GitHub',
+    hero_cta_api: 'API Docs',
+    stat_version: 'Версия',
+    stat_langs: 'Языки',
+    stat_clients: 'Клиенты',
+    stat_free: 'Бесплатно',
+    sb_getting_started: 'Начало работы',
+    sb_intro: 'Введение',
+    sb_features: 'Возможности',
+    sb_arch: 'Архитектура',
+    sb_install: 'Установка',
+    sb_setup: 'Мастер настройки',
+    sb_guides: 'Руководства',
+    sb_config: 'Настройки',
+    sb_users: 'Пользователи',
+    sb_sublink: 'Менеджер подписок',
+    sb_groups: 'Группы',
+    sb_bot: 'Telegram-бот',
+    sb_backup: 'Резервные копии',
+    sb_reference: 'Справочник',
+    sb_clients: 'Клиенты',
+    sb_api: 'API',
+    sb_security: 'Безопасность',
+    sb_faq: 'FAQ',
+    sb_trouble: 'Проблемы',
+    sb_contrib: 'Вклад',
+    sb_license: 'Лицензия',
+    intro_title: 'Что такое SAZ Bridge?',
+    intro_desc: 'SAZ Bridge — современная, лёгкая и полностью бесплатная панель управления подписками для V2Ray / Xray / Vmess / Vless, работающая на Cloudflare Workers.',
+    intro_p1: 'Если вы управляете прокси-серверами и хотите распространять конфигурации пользователям, SAZ Bridge даст вам полноценную платформу без единой строки backend-кода и без VPS.',
+    intro_p2: 'Всё работает на глобальной граничной сети Cloudflare — более 300 локаций — обеспечивая миллисекундную задержку для пользователей по всему миру.',
+    intro_f1_t: 'Ноль конфигурации',
+    intro_f1_d: 'Никаких секретов, никаких переменных окружения. Всё в KV и настраивается через встроенный мастер.',
+    intro_f2_t: 'Глобальная сеть',
+    intro_f2_d: 'Работает на границе Cloudflare — самый быстрый отклик для всех.',
+    intro_f3_t: 'Полностью бесплатно',
+    intro_f3_d: 'Бесплатного плана Cloudflare хватает на тысячи пользователей в день.',
+    intro_f4_t: 'Тема Windows XP',
+    intro_f4_d: 'Ностальгическая тема Luna с улучшениями UX.',
+    intro_note_t: 'Мост между старым и новым',
+    intro_note_d: 'SAZ Bridge берёт надёжный подход классических панелей и модернизирует его для serverless-эры.',
+    features_title: 'Всё, что нужно',
+    features_desc: 'Продуманный набор функций, охватывающий все аспекты управления подписками.',
+    feat_users_t: 'Полное управление пользователями',
+    feat_users_d: 'Создание, редактирование и удаление пользователей с квотами и сроками.',
+    feat_subs_t: 'Продвинутый Sub Manager',
+    feat_subs_d: 'Создавайте подписки с произвольными именами, префиксами и несколькими источниками.',
+    feat_groups_t: 'Система групп',
+    feat_groups_d: 'Организуйте пользователей и подписки в цветные группы.',
+    feat_bot_t: 'Интеграция Telegram-бота',
+    feat_bot_d: 'Автонастройка webhook из панели. Пользователи получают ссылку мгновенно.',
+    feat_qr_t: 'Генератор QR-кодов',
+    feat_qr_d: 'Мгновенные QR-коды для любой ссылки подписки.',
+    feat_i18n_t: '4 языка',
+    feat_i18n_d: 'Полная поддержка персидского (RTL), английского, русского и китайского.',
+    feat_sec_t: 'Безопасность прежде всего',
+    feat_sec_d: 'SHA-256 хеширование, 24-часовые сессии, защищённые cookies, HTTPS.',
+    feat_backup_t: 'Резервное копирование',
+    feat_backup_d: 'Полный экспорт и импорт JSON. Миграция между воркерами за секунды.',
+    feat_stats_t: 'Аналитическая панель',
+    feat_stats_d: 'Топ пользователей по трафику, посещения, распределение по группам.',
+    feat_theme_t: 'Тема Windows XP',
+    feat_theme_d: 'Аутентичные градиенты Luna, глянцевые заголовки, рабочее меню «Пуск».',
+    features_note_t: 'Без внешних зависимостей',
+    features_note_d: 'Без npm, без сборки, без CDN — один _worker.js и один KV.',
+    arch_title: 'Как это работает',
+    arch_desc: 'SAZ Bridge использует современную serverless-архитектуру с минимальным отпечатком.',
+    arch_stack: 'Обзор стека',
+    arch_w_d: 'Среда выполнения — serverless JavaScript на границе.',
+    arch_kv_d: 'Быстрое глобально-распределённое key-value хранилище.',
+    arch_ui_d: 'Без фреймворков, без сборки — всё в одном файле.',
+    arch_routes: 'Поток запросов',
+    arch_files: 'Структура файлов',
+    arch_data: 'Модель данных',
+    arch_data_d: 'Все данные хранятся в KV-пространстве SUB_KV по ключам:',
+    th_key: 'Ключ',
+    th_value: 'Тип значения',
+    th_purpose: 'Назначение',
+    td_config: 'Глобальные настройки: хеш пароля, путь, тема, язык, токен бота',
+    td_users: 'Все пользователи с токенами, квотами, сроками',
+    td_groups: 'Цветные группы для организации',
+    td_subs: 'Пользовательские подписки с источниками',
+    td_session: 'Активные админ-сессии (TTL: 24ч)',
+    install_title: 'Развёртывание за 5 минут',
+    install_desc: 'Выберите метод — Dashboard для простоты, Wrangler CLI для профи.',
+    tab_dash: 'Dashboard',
+    tab_wrangler: 'Wrangler CLI',
+    tab_github: 'GitHub Actions',
+    st_dash_1_t: 'Откройте Cloudflare Dashboard',
+    st_dash_1_d: 'Перейдите на dash.cloudflare.com и войдите.',
+    st_dash_2_t: 'Создайте Worker',
+    st_dash_2_d: 'Workers & Pages → Create → Worker. Имя: saz-bridge.',
+    st_dash_3_t: 'Вставьте код',
+    st_dash_3_d: 'Нажмите Edit code, удалите содержимое по умолчанию и вставьте _worker.js.',
+    st_dash_4_t: 'Создайте KV Namespace',
+    st_dash_4_d: 'Workers & Pages → KV → Create namespace. Имя: SUB_KV.',
+    st_dash_5_t: 'Привяжите KV к Worker',
+    st_dash_5_d: 'Settings → Variables → KV Namespace Bindings: SUB_KV.',
+    st_dash_6_t: 'Откройте URL воркера',
+    st_dash_6_d: 'Откройте https://saz-bridge.YOUR-SUBDOMAIN.workers.dev. Появится мастер!',
+    st_dash_note_t: 'Ноль секретов',
+    st_dash_note_d: 'Не нужно добавлять переменные окружения. Всё настраивается в панели.',
+    st_wr_1_t: 'Установите требования',
+    st_wr_1_d: 'Требуются Node.js 18+ и npm.',
+    st_wr_2_t: 'Клонируйте репозиторий',
+    st_wr_3_t: 'Создайте KV namespaces',
+    st_wr_4_t: 'Отредактируйте wrangler.toml',
+    st_wr_5_t: 'Разверните',
+    gh_intro: 'Для автоматических развёртываний используйте GitHub Actions. Создайте .github/workflows/deploy.yml:',
+    gh_note_t: 'Необходимые секреты',
+    gh_note_d: 'Добавьте CF_API_TOKEN в секреты репозитория.',
+    setup_title: 'Первоначальная настройка',
+    setup_desc: 'При первом посещении SAZ Bridge запускает дружелюбный мастер настройки.',
+    setup_p1: 'Откройте URL воркера в браузере. Мастер появится автоматически, если конфигурации нет.',
+    setup_step_1: 'Пароль администратора',
+    setup_step_1_d: 'Выберите надёжный пароль (мин. 6 символов). Хранится как SHA-256.',
+    setup_step_2: 'Путь подписки',
+    setup_step_2_d: 'Сегмент URL для ссылок. По умолчанию sub.',
+    setup_step_3: 'Язык по умолчанию',
+    setup_step_3_d: 'Язык для новых посетителей. Можно переопределить ?lang=xx.',
+    setup_step_4: 'Тема панели',
+    setup_step_4_d: 'Luna Blue, Classic или Silver.',
+    setup_step_5: 'Telegram-бот (опционально)',
+    setup_step_5_d: 'Вставьте токен бота. Можно добавить позже.',
+    setup_step_6: 'Готово',
+    setup_step_6_d: 'Нажмите Setup — вы автоматически войдёте в панель.',
+    setup_reset_t: 'Сброс настройки',
+    setup_reset_d: 'Чтобы перезапустить мастер, удалите ключ config из KV и обновите страницу.',
+    config_title: 'Настройки панели',
+    config_desc: 'Все настройки управляются со вкладки Settings в панели.',
+    th_setting: 'Параметр',
+    th_default: 'По умолчанию',
+    th_desc: 'Описание',
+    set_lang: 'Язык по умолчанию. Один из: fa, en, ru, zh.',
+    set_subpath: 'Сегмент URL для подписок. Держите случайным для безопасности.',
+    set_theme: 'Визуальная тема. Одна из: luna, classic, silver.',
+    set_ann: 'Короткое сообщение на главной панели.',
+    set_bot: 'Токен бота Telegram от @BotFather.',
+    set_pass: 'SHA-256 хеш админ-пароля.',
+    config_path_t: 'Выбор безопасного пути',
+    config_path_d: 'Избегайте очевидных путей (sub, link). Используйте случайные (br-7k3p9x).',
+    users_title: 'Управление пользователями',
+    users_desc: 'Создание, редактирование и мониторинг пользователей.',
+    users_fields: 'Поля пользователя',
+    th_field: 'Поле',
+    th_type: 'Тип',
+    th_req: 'Обязательно',
+    uf_name: 'Отображаемое имя.',
+    uf_quota: 'Лимит трафика в ГБ. 0 = безлимит.',
+    uf_days: 'Дней до истечения. 0 = бессрочно.',
+    uf_group: 'ID группы.',
+    uf_tgid: 'Telegram Chat ID.',
+    uf_links: 'По одной ссылке на строку: vmess://, vless:// и т.д.',
+    users_status: 'Статусы пользователя',
+    us_active: 'Активен',
+    us_active_d: 'Срок действителен, квота не превышена.',
+    us_expired: 'Истёк',
+    us_expired_d: 'Срок прошёл. Feed возвращает 403.',
+    us_disabled: 'Отключён',
+    us_disabled_d: 'Отключён вручную администратором.',
+    users_actions: 'Быстрые действия',
+    ua_copy: 'Копировать ссылку',
+    ua_qr: 'QR-код',
+    ua_edit: 'Редактировать',
+    ua_delete: 'Удалить',
+    ua_search: 'Поиск',
+    subs_title: 'Менеджер подписок',
+    subs_desc: 'Создавайте подписки, объединяющие ссылки нескольких пользователей.',
+    subs_what: 'Что такое подписка?',
+    subs_what_d: 'Подписка — это URL, возвращающий Base64-список прокси-ссылок.',
+    subs_url: 'Формат URL',
+    subs_types: 'Два типа подписок',
+    subs_user_t: 'Пользовательская',
+    subs_user_d: 'Создаётся автоматически для каждого пользователя.',
+    subs_custom_t: 'Пользовательская (custom)',
+    subs_custom_d: 'Создаётся в Sub Manager. Несколько источников + прямые ссылки.',
+    subs_options: 'Опции custom-подписки',
+    th_option: 'Опция',
+    so_name: 'Имя для идентификации.',
+    so_prefix: 'Префикс-иконка в клиентах.',
+    so_group: 'Назначение группы.',
+    so_sources: 'Массив токенов пользователей.',
+    so_direct: 'Дополнительные ссылки.',
+    so_quota: 'Лимит трафика (0 = безлимит).',
+    so_days: 'Дней до истечения.',
+    subs_response: 'Формат ответа',
+    subs_response_d: 'Endpoint возвращает ссылки через newline, закодированные Base64:',
+    subs_headers_d: 'Заголовки ответа содержат метаданные подписки:',
+    groups_title: 'Организация с группами',
+    groups_desc: 'Упорядочивайте сотни пользователей и подписок цветными группами.',
+    groups_p1: 'Группы помогают организовывать пользователей и подписки.',
+    gr_color_t: 'Свои цвета',
+    gr_color_d: 'Выбирайте любой hex-цвет.',
+    gr_count_t: 'Счётчики',
+    gr_count_d: 'Мгновенно видно количество пользователей и подписок.',
+    gr_clean_t: 'Безопасное удаление',
+    gr_clean_d: 'Удаление группы открепляет участников без потери данных.',
+    gr_examples: 'Примеры применения',
+    bot_title: 'Интеграция с Telegram',
+    bot_desc: 'Пользователи получают ссылку прямо из Telegram.',
+    bot_setup: 'Настройка',
+    bot_st_1_t: 'Напишите @BotFather',
+    bot_st_1_d: 'Откройте Telegram, найдите @BotFather и отправьте /newbot.',
+    bot_st_2_t: 'Вставьте токен',
+    bot_st_2_d: 'SAZ Bridge → вкладка Bot → вставьте токен → Connect Bot.',
+    bot_st_3_t: 'Привяжите пользователей',
+    bot_st_3_d: 'Получите Chat ID через @userinfobot и введите в профиль.',
+    bot_st_4_t: 'Готово!',
+    bot_st_4_d: 'Пользователи могут отправлять /start и получать подписку.',
+    bot_cmds: 'Доступные команды',
+    th_cmd: 'Команда',
+    bc_start: 'Приветствие с inline-клавиатурой.',
+    bc_mysub: 'Персональная ссылка подписки.',
+    bc_usage: 'Трафик с прогресс-баром.',
+    bc_help: 'Все команды.',
+    bot_broadcast_t: 'Рассылка',
+    bot_broadcast_d: 'Отправьте сообщение всем привязанным пользователям.',
+    backup_title: 'Никогда не теряйте данные',
+    backup_desc: 'Экспорт в JSON, миграция, восстановление.',
+    backup_export: 'Экспорт',
+    backup_export_d: 'Backup → Export JSON. Скачается файл saz-bridge-backup-YYYY-MM-DD.json:',
+    backup_import: 'Импорт',
+    backup_import_d: 'Backup → Restore, выберите JSON. Сначала сделайте свежую копию!',
+    backup_warn_t: 'Импорт перезаписывает всё',
+    backup_warn_d: 'Импорт заменяет пользователей, группы и подписки. Пароль сохраняется.',
+    clients_title: 'Совместимые клиенты',
+    clients_desc: 'SAZ Bridge работает со всеми основными клиентами.',
+    cl_v2rayng: 'Menu → Subscription → Add URL.',
+    cl_nekobox: 'Groups → Add → URL.',
+    cl_shadow: 'Home → Add → Subscribe.',
+    cl_v2box: 'Subscriptions → + → URL.',
+    cl_clash: 'Добавьте как proxy provider. Автоопределение → YAML.',
+    cl_v2rayn: 'Subscription → Subscription settings → Add.',
+    cl_singbox: 'Remote outbound — добавьте URL.',
+    cl_streisand: 'Полная поддержка подписок.',
+    api_title: 'Справочник API',
+    api_desc: 'Управляйте всем программно через JSON-эндпоинты.',
+    api_auth_t: 'Аутентификация',
+    api_auth_d: 'Все эндпоинты требуют cookie session. Получите через POST /login.',
+    api_auth: 'Аутентификация',
+    api_login_d: 'Вход с паролем администратора.',
+    api_logout_d: 'Уничтожает сессию.',
+    api_users: 'Пользователи',
+    api_user_create: 'Создать пользователя.',
+    api_user_update: 'Обновить пользователя.',
+    api_user_delete: 'Удалить пользователя.',
+    api_subs: 'Подписки',
+    api_sub_create: 'Создать подписку.',
+    api_sub_update: 'Обновить подписку.',
+    api_sub_delete: 'Удалить подписку.',
+    api_groups: 'Группы',
+    api_group_delete: 'Удалить группу и открепить участников.',
+    api_config: 'Конфигурация',
+    api_config_get: 'Получить конфигурацию.',
+    api_config_post: 'Обновить конфигурацию.',
+    api_bot: 'Бот',
+    api_bot_set: 'Зарегистрировать webhook.',
+    api_bot_unset: 'Удалить webhook.',
+    api_bot_broadcast: 'Рассылка.',
+    api_backup: 'Резерв',
+    api_backup_get: 'Скачать JSON.',
+    api_restore_post: 'Восстановить из JSON.',
+    api_sub_feed: 'Feed подписок',
+    api_feed_d: 'Возвращает Base64-подписку.',
+    api_webhook: 'Telegram Webhook',
+    api_webhook_d: 'Вызывается Telegram.',
+    sec_title: 'Встроенная безопасность',
+    sec_desc: 'SAZ Bridge следует лучшим практикам безопасности.',
+    sec_hash_t: 'SHA-256',
+    sec_hash_d: 'Пароли никогда не хранятся в открытом виде.',
+    sec_ttl_t: '24-часовые сессии',
+    sec_ttl_d: 'Автоматически истекают через 24 часа.',
+    sec_cookies_t: 'Защищённые cookies',
+    sec_cookies_d: 'HttpOnly + Secure + SameSite.',
+    sec_https_t: 'Принудительный HTTPS',
+    sec_https_d: 'Cloudflare обеспечивает автоматический HTTPS.',
+    sec_sanitize_t: 'Санитизация ввода',
+    sec_sanitize_d: 'Все входные данные проверяются.',
+    sec_ratelimit_t: 'Rate Limiting',
+    sec_ratelimit_d: 'Включите правила Cloudflare.',
+    sec_recommend: 'Рекомендации',
+    sec_r1: 'Используйте надёжный пароль.',
+    sec_r2: 'Случайный subPath.',
+    sec_r3: 'Включите Cloudflare Access.',
+    sec_r4: 'Меняйте пароль каждые несколько месяцев.',
+    sec_r5: 'Регулярные резервные копии.',
+    faq_title: 'Часто задаваемые вопросы',
+    faq_desc: 'Ответы на популярные вопросы.',
+    faq_q1: 'Нужен ли VPS?',
+    faq_a1: 'Нет! Всё работает на Cloudflare Workers.',
+    faq_q2: 'Какие лимиты?',
+    faq_a2: 'Workers: 100,000/день. KV: 100K чтений + 1K записей/день.',
+    faq_q3: 'Как подключить пользователей к боту?',
+    faq_a3: 'Получите Chat ID из @userinfobot и введите в панели.',
+    faq_q4: 'Работает с Clash / Mihomo?',
+    faq_a4: 'Да, автоопределение User-Agent.',
+    faq_q5: 'Как сделать бэкап?',
+    faq_a5: 'Панель → Start Menu → Backup → Export JSON.',
+    faq_q6: 'Можно свой домен?',
+    faq_a6: 'Да, в Cloudflare Dashboard → Settings → Domains.',
+    faq_q7: 'Какие протоколы?',
+    faq_a7: 'VMess, VLESS, Trojan, Shadowsocks, SSR, Hysteria, Hysteria2, TUIC, SOCKS, WireGuard.',
+    faq_q8: 'Данные в безопасности?',
+    faq_a8: 'Да, только в вашем KV.',
+    faq_q9: 'Добавить языки?',
+    faq_a9: 'Да — docs/LANGUAGES.md.',
+    faq_q10: 'Как обновить?',
+    faq_a10: 'git pull && wrangler deploy.',
+    tr_title: 'Частые проблемы',
+    tr_desc: 'Решения частых проблем.',
+    tr_q1: 'Белый экран',
+    tr_a1: 'Проверьте F12 и SUB_KV binding.',
+    tr_q2: 'Пустая подписка',
+    tr_a2: 'Добавьте хотя бы одну валидную ссылку.',
+    tr_q3: 'Бот не отвечает',
+    tr_a3: 'Bot → токен → Connect Bot.',
+    tr_q4: 'Лимит записей KV',
+    tr_a4: '1K записей/день. Уменьшите частоту или обновите план.',
+    tr_q5: 'Не могу войти',
+    tr_a5: 'Удалите config из KV. Перезагрузите — появится мастер.',
+    tr_q6: 'Ошибка "не поддерживается"',
+    tr_a6: 'Проверьте формат ссылок.',
+    con_title: 'Присоединяйтесь',
+    con_desc: 'Любой вклад приветствуется — код, документация, переводы.',
+    con_flow: 'Процесс',
+    con_step_1: 'Форкните репозиторий',
+    con_step_1_d: 'Нажмите Fork и клонируйте.',
+    con_step_2: 'Создайте ветку',
+    con_step_3: 'Закоммитьте',
+    con_step_4: 'Отправьте PR',
+    con_ideas: 'Идеи для вклада',
+    con_i1: 'Новый язык в I18N.',
+    con_i2: 'Улучшение доступности UI.',
+    con_i3: 'Новый пресет клиента.',
+    con_i4: 'Тесты для API.',
+    con_i5: 'Улучшение документации.',
+    con_i6: 'Экспорт в Clash YAML.',
+    lic_title: 'Лицензия MIT',
+    lic_p1: 'SAZ Bridge распространяется под MIT License.',
+    foot_desc: 'Менеджер подписок Cloudflare Worker. Быстро, бесплатно, красиво.',
+    foot_issues: 'Сообщить о проблеме',
+    foot_deploy: 'Руководство по деплою',
+    foot_credit: 'Сделано с ❤️ от'
+  },
+
+  zh: {
+    nav_intro: '简介',
+    nav_features: '功能',
+    nav_install: '安装',
+    nav_config: '配置',
+    nav_sublink: '订阅',
+    nav_bot: '机器人',
+    nav_api: 'API',
+    nav_faq: 'FAQ',
+    hero_badge: 'Cloudflare Worker 订阅管理器 · v0.0.7',
+    hero_title_1: 'SAZ Bridge',
+    hero_title_2: '终极订阅管理器',
+    hero_sub: '管理用户、创建 Base64 订阅、集成 Telegram 机器人并享受正宗的 Windows XP 体验 —— 全部运行在 Cloudflare 边缘网络上，完全免费。',
+    hero_cta_start: '开始使用',
+    hero_cta_github: '在 GitHub 上查看',
+    hero_cta_api: 'API 文档',
+    stat_version: '版本',
+    stat_langs: '语言',
+    stat_clients: '客户端',
+    stat_free: '免费',
+    sb_getting_started: '快速开始',
+    sb_intro: '简介',
+    sb_features: '功能',
+    sb_arch: '架构',
+    sb_install: '安装',
+    sb_setup: '设置向导',
+    sb_guides: '指南',
+    sb_config: '配置',
+    sb_users: '用户管理',
+    sb_sublink: '订阅管理',
+    sb_groups: '分组',
+    sb_bot: 'Telegram 机器人',
+    sb_backup: '备份与恢复',
+    sb_reference: '参考资料',
+    sb_clients: '客户端',
+    sb_api: 'API 参考',
+    sb_security: '安全',
+    sb_faq: '常见问题',
+    sb_trouble: '故障排除',
+    sb_contrib: '贡献',
+    sb_license: '许可证',
+    intro_title: '什么是 SAZ Bridge？',
+    intro_desc: 'SAZ Bridge 是一个现代、轻量且完全免费的订阅管理面板，专为 V2Ray / Xray / Vmess / Vless 服务提供商打造，运行于 Cloudflare Workers。',
+    intro_p1: '如果您运行代理服务器并需要向用户分发配置链接，SAZ Bridge 为您提供完整、专业级的管理平台，无需任何后端代码，无需 VPS 或托管费用。',
+    intro_p2: '它完全运行在 Cloudflare 全球边缘网络上 —— 覆盖全球 300+ 个位置 —— 为您的用户提供毫秒级延迟。',
+    intro_f1_t: '零配置',
+    intro_f1_d: '无 Secrets，无环境变量。一切都存储在 KV 中并通过内置向导设置。',
+    intro_f2_t: '全球网络',
+    intro_f2_d: '运行在 Cloudflare 边缘 —— 为全球用户提供最快响应。',
+    intro_f3_t: '完全免费',
+    intro_f3_d: 'Cloudflare 免费套餐每天足以支持数千名用户。',
+    intro_f4_t: 'Windows XP 主题',
+    intro_f4_d: '怀旧的 Luna 主题，搭配现代 UX 改进。',
+    intro_note_t: '连接新旧之桥',
+    intro_note_d: 'SAZ Bridge 采用经典代理面板软件的稳健方法，并为无服务器时代进行现代化。',
+    features_title: '您需要的一切',
+    features_desc: '精心设计的功能集，涵盖订阅管理的各个方面。',
+    feat_users_t: '完整的用户管理',
+    feat_users_d: '创建、编辑、删除用户，设置自定义流量和有效期。',
+    feat_subs_t: '高级订阅管理器',
+    feat_subs_d: '使用自定义名称、前缀和多源聚合构建订阅链接。',
+    feat_groups_t: '分组系统',
+    feat_groups_d: '将用户和订阅整理为彩色分组。',
+    feat_bot_t: 'Telegram 机器人集成',
+    feat_bot_d: '从面板自动配置 Webhook。用户可即时获取订阅链接。',
+    feat_qr_t: '二维码生成器',
+    feat_qr_d: '为任何订阅 URL 即时生成二维码。',
+    feat_i18n_t: '4 种语言',
+    feat_i18n_d: '完整支持波斯语（RTL）、英语、俄语和中文。',
+    feat_sec_t: '安全优先',
+    feat_sec_d: 'SHA-256 密码哈希、24 小时会话、加固 Cookie 和 HTTPS。',
+    feat_backup_t: '备份与恢复',
+    feat_backup_d: '完整的 JSON 导出和导入。几秒内在不同 Worker 之间迁移。',
+    feat_stats_t: '分析仪表板',
+    feat_stats_d: '按流量查看顶级用户、总访问量、分组分布等。',
+    feat_theme_t: 'Windows XP 主题',
+    feat_theme_d: '正宗的 Luna 蓝色渐变、光泽标题栏、可用的开始菜单。',
+    features_note_t: '零外部依赖',
+    features_note_d: '无 npm 包、无构建步骤、无 CDN —— 单个 _worker.js 加一个 KV 命名空间即可。',
+    arch_title: '工作原理',
+    arch_desc: 'SAZ Bridge 使用现代无服务器架构，占用极低。',
+    arch_stack: '技术栈概览',
+    arch_w_d: '运行时环境 —— 边缘上的无服务器 JavaScript。',
+    arch_kv_d: '快速、全球分布式的键值存储。',
+    arch_ui_d: '无框架、无构建 —— 全部在一个文件中。',
+    arch_routes: '请求流',
+    arch_files: '文件结构',
+    arch_data: '数据模型',
+    arch_data_d: '所有数据存储在单个 KV 命名空间（SUB_KV）中：',
+    th_key: '键',
+    th_value: '值类型',
+    th_purpose: '用途',
+    td_config: '全局设置：密码哈希、订阅路径、主题、语言、机器人令牌',
+    td_users: '所有用户记录，含令牌、配额、有效期、链接',
+    td_groups: '用于整理用户和订阅的彩色分组',
+    td_subs: '带来源、前缀、访问量的自定义订阅',
+    td_session: '活动的管理员会话（TTL: 24 小时）',
+    install_title: '5 分钟内部署',
+    install_desc: '选择您喜欢的方法 —— Dashboard 简单，Wrangler CLI 强大。',
+    tab_dash: 'Dashboard',
+    tab_wrangler: 'Wrangler CLI',
+    tab_github: 'GitHub Actions',
+    st_dash_1_t: '打开 Cloudflare Dashboard',
+    st_dash_1_d: '访问 dash.cloudflare.com 并登录。',
+    st_dash_2_t: '创建 Worker',
+    st_dash_2_d: 'Workers & Pages → Create → Worker。名称：saz-bridge。',
+    st_dash_3_t: '粘贴代码',
+    st_dash_3_d: '点击 Edit code，删除默认内容并粘贴完整的 _worker.js。',
+    st_dash_4_t: '创建 KV 命名空间',
+    st_dash_4_d: 'Workers & Pages → KV → Create namespace。名称：SUB_KV。',
+    st_dash_5_t: '将 KV 绑定到 Worker',
+    st_dash_5_d: 'Settings → Variables → KV Namespace Bindings：SUB_KV。',
+    st_dash_6_t: '访问您的 Worker URL',
+    st_dash_6_d: '打开 https://saz-bridge.YOUR-SUBDOMAIN.workers.dev。设置向导会出现！',
+    st_dash_note_t: '无需任何 Secrets',
+    st_dash_note_d: '您不需要添加任何环境变量。所有设置都在面板内配置并存储在 KV 中。',
+    st_wr_1_t: '安装前置条件',
+    st_wr_1_d: '需要 Node.js 18+ 和 npm。',
+    st_wr_2_t: '克隆仓库',
+    st_wr_3_t: '创建 KV 命名空间',
+    st_wr_4_t: '编辑 wrangler.toml',
+    st_wr_5_t: '部署',
+    gh_intro: '要在每次推送时自动部署，请使用 GitHub Actions。创建 .github/workflows/deploy.yml：',
+    gh_note_t: '需要的 Secrets',
+    gh_note_d: '在仓库 Secrets 中添加 CF_API_TOKEN。',
+    setup_title: '首次运行配置',
+    setup_desc: '第一次访问时，SAZ Bridge 会引导您完成友好的设置向导。',
+    setup_p1: '在浏览器中打开您的 Worker URL。如果没有配置，设置向导会自动出现。',
+    setup_step_1: '管理员密码',
+    setup_step_1_d: '选择一个强密码（至少 6 个字符）。以 SHA-256 哈希存储。',
+    setup_step_2: '订阅路径',
+    setup_step_2_d: '订阅链接的 URL 段。默认为 sub。',
+    setup_step_3: '默认语言',
+    setup_step_3_d: '新访问者看到的语言。可通过 ?lang=xx 覆盖。',
+    setup_step_4: '面板主题',
+    setup_step_4_d: '在 Luna Blue、Classic 和 Silver 之间选择。',
+    setup_step_5: 'Telegram 机器人（可选）',
+    setup_step_5_d: '粘贴机器人令牌以启用 Telegram 集成。可稍后添加。',
+    setup_step_6: '完成',
+    setup_step_6_d: '点击 Setup —— 您将自动登录并被带到仪表板。',
+    setup_reset_t: '重置设置',
+    setup_reset_d: '要重新运行向导，请从 KV 中删除 config 键并重新加载页面。',
+    config_title: '面板设置',
+    config_desc: '所有设置都从管理面板的 Settings 选项卡管理。',
+    th_setting: '设置',
+    th_default: '默认',
+    th_desc: '说明',
+    set_lang: '默认面板语言。可选：fa、en、ru、zh。',
+    set_subpath: '用于订阅源的 URL 段。为了安全请保持随机。',
+    set_theme: '视觉主题。可选：luna、classic、silver。',
+    set_ann: '仪表板首页显示的一条短消息。',
+    set_bot: '来自 @BotFather 的 Telegram 机器人令牌。',
+    set_pass: '管理员密码的 SHA-256 哈希。',
+    config_path_t: '选择安全的订阅路径',
+    config_path_d: '在生产环境中避免使用 sub 或 link 等易猜路径。使用随机字符串如 br-7k3p9x。',
+    users_title: '管理用户',
+    users_desc: '从单一仪表板创建、编辑和监控每个用户。',
+    users_fields: '用户字段',
+    th_field: '字段',
+    th_type: '类型',
+    th_req: '必填',
+    uf_name: '用户的显示名称。',
+    uf_quota: '流量限制（GB）。0 表示无限制。',
+    uf_days: '到期前的天数。0 表示无到期。',
+    uf_group: '用于组织的分组 ID。',
+    uf_tgid: '用于机器人集成的 Telegram Chat ID。',
+    uf_links: '每行一个代理链接：vmess://、vless:// 等。',
+    users_status: '用户状态',
+    us_active: '活动',
+    us_active_d: '用户有效期有效且未超出配额。',
+    us_expired: '已过期',
+    us_expired_d: '到期日期已过。订阅源返回 403。',
+    us_disabled: '已禁用',
+    us_disabled_d: '由管理员手动禁用。所有访问被阻止。',
+    users_actions: '快速操作',
+    ua_copy: '复制订阅链接',
+    ua_qr: '显示二维码',
+    ua_edit: '编辑',
+    ua_delete: '删除',
+    ua_search: '搜索',
+    subs_title: '订阅管理器',
+    subs_desc: '构建自定义订阅，将多个用户的链接聚合到一个 URL 下。',
+    subs_what: '什么是订阅？',
+    subs_what_d: '订阅是一个 URL，返回 Base64 编码的代理链接列表。',
+    subs_url: 'URL 格式',
+    subs_types: '两种订阅',
+    subs_user_t: '用户订阅',
+    subs_user_d: '为每个用户自动创建。使用其个人令牌。',
+    subs_custom_t: '自定义订阅',
+    subs_custom_d: '从 Sub Manager 构建。组合多个用户的链接 + 直接链接。',
+    subs_options: '自定义订阅选项',
+    th_option: '选项',
+    so_name: '用于识别的内部名称。',
+    so_prefix: '客户端中显示的图标/表情前缀。',
+    so_group: '分配给一个分组。',
+    so_sources: '要从中拉取链接的用户令牌数组。',
+    so_direct: '不绑定到任何用户的附加链接。',
+    so_quota: '总流量限制（0 = 无限制）。',
+    so_days: '订阅到期前的天数。',
+    subs_response: '响应格式',
+    subs_response_d: '订阅端点返回以换行符连接的链接，进行 Base64 编码：',
+    subs_headers_d: '响应头包含标准订阅元数据：',
+    groups_title: '使用分组组织',
+    groups_desc: '使用彩色分组保持数百个用户和订阅井井有条。',
+    groups_p1: '分组帮助您组织用户和订阅。每个分组有名称、颜色，可用于过滤和报告。',
+    gr_color_t: '自定义颜色',
+    gr_color_d: '选择任意十六进制颜色以视觉区分分组。',
+    gr_count_t: '计数指示器',
+    gr_count_d: '即时查看每个分组的用户和订阅数。',
+    gr_clean_t: '安全删除',
+    gr_clean_d: '删除分组会自动分离成员而不丢失数据。',
+    gr_examples: '使用示例',
+    bot_title: 'Telegram 集成',
+    bot_desc: '让您的用户直接从 Telegram 获取订阅链接。',
+    bot_setup: '设置',
+    bot_st_1_t: '与 @BotFather 对话',
+    bot_st_1_d: '打开 Telegram，搜索 @BotFather 并发送 /newbot。',
+    bot_st_2_t: '在面板中粘贴令牌',
+    bot_st_2_d: 'SAZ Bridge → Bot 选项卡 → 粘贴令牌 → 点击 Connect Bot。',
+    bot_st_3_t: '将用户链接到 Telegram',
+    bot_st_3_d: '从 @userinfobot 获取每个用户的 Chat ID 并在面板中输入。',
+    bot_st_4_t: '完成！',
+    bot_st_4_d: '用户现在可以向机器人发送 /start 并获取订阅。',
+    bot_cmds: '可用命令',
+    th_cmd: '命令',
+    bc_start: '显示带 inline 键盘的欢迎消息。',
+    bc_mysub: '返回用户的个人订阅 URL。',
+    bc_usage: '显示带进度条的流量使用情况。',
+    bc_help: '显示所有可用命令。',
+    bot_broadcast_t: '广播',
+    bot_broadcast_d: '从 Bot 选项卡，您可以向所有关联用户发送消息。',
+    backup_title: '永不丢失数据',
+    backup_desc: '将一切导出为 JSON、在 Worker 之间迁移或从以前的快照恢复。',
+    backup_export: '导出',
+    backup_export_d: '前往 Backup → Export JSON。下载名为 saz-bridge-backup-YYYY-MM-DD.json 的文件：',
+    backup_import: '导入',
+    backup_import_d: '使用 Backup → Restore 选择以前导出的 JSON 文件。先做一次新备份！',
+    backup_warn_t: '导入会覆盖一切',
+    backup_warn_d: '导入完全替换用户、分组和订阅。管理员密码保留。',
+    clients_title: '兼容客户端',
+    clients_desc: 'SAZ Bridge 开箱即用，兼容所有主流订阅客户端。',
+    cl_v2rayng: 'Menu → Subscription → Add URL。',
+    cl_nekobox: 'Groups → Add → URL。完整头支持。',
+    cl_shadow: 'Home → Add → Subscribe。',
+    cl_v2box: 'Subscriptions → + → 粘贴 URL。',
+    cl_clash: '添加为代理提供程序。自动检测并返回 YAML。',
+    cl_v2rayn: 'Subscription → Subscription settings → Add。',
+    cl_singbox: '远程出站支持 —— 直接添加订阅 URL。',
+    cl_streisand: '完整订阅支持，含 userinfo 头解析。',
+    api_title: 'API 参考',
+    api_desc: '通过 JSON 端点以编程方式管理一切。',
+    api_auth_t: '身份验证',
+    api_auth_d: '所有端点需要有效的 session cookie。通过 POST /login 获取。',
+    api_auth: '身份验证',
+    api_login_d: '使用管理员密码验证。成功时设置会话 cookie。',
+    api_logout_d: '销毁会话并重定向到登录。',
+    api_users: '用户',
+    api_user_create: '创建新用户。返回生成的令牌。',
+    api_user_update: '更新现有用户。所有字段可选。',
+    api_user_delete: '永久删除用户。',
+    api_subs: '订阅',
+    api_sub_create: '创建自定义订阅。',
+    api_sub_update: '更新订阅。',
+    api_sub_delete: '删除订阅。',
+    api_groups: '分组',
+    api_group_delete: '删除分组并分离其成员。',
+    api_config: '配置',
+    api_config_get: '获取当前配置（删除密码哈希和机器人令牌）。',
+    api_config_post: '更新配置。',
+    api_bot: '机器人',
+    api_bot_set: '注册 Telegram webhook。',
+    api_bot_unset: '移除 webhook。',
+    api_bot_broadcast: '向所有关联用户发送消息。',
+    api_backup: '备份',
+    api_backup_get: '将完整备份下载为 JSON。',
+    api_restore_post: '从备份 JSON 恢复。覆盖现有数据。',
+    api_sub_feed: '订阅源',
+    api_feed_d: '返回 Base64 编码的订阅。Content-Type 因 User-Agent 而异。',
+    api_webhook: 'Telegram Webhook',
+    api_webhook_d: '由 Telegram 调用。不用于直接使用。',
+    sec_title: '内置安全',
+    sec_desc: 'SAZ Bridge 开箱即用，遵循现代安全最佳实践。',
+    sec_hash_t: 'SHA-256 密码哈希',
+    sec_hash_d: '密码从不以明文存储。仅存储加盐的 SHA-256 哈希。',
+    sec_ttl_t: '24 小时会话',
+    sec_ttl_d: '会话在 24 小时后自动过期。',
+    sec_cookies_t: '加固 Cookie',
+    sec_cookies_d: 'HttpOnly + Secure + SameSite=Lax —— 浏览器无法从 JavaScript 读取它们。',
+    sec_https_t: '强制 HTTPS',
+    sec_https_d: 'Cloudflare 提供带 HTTP/3 和 TLS 1.3 的自动 HTTPS。',
+    sec_sanitize_t: '输入清理',
+    sec_sanitize_d: '所有用户输入都经过验证和转义，防止 XSS 和注入。',
+    sec_ratelimit_t: '支持速率限制',
+    sec_ratelimit_d: '启用 Cloudflare 的速率限制规则以防止暴力破解攻击。',
+    sec_recommend: '推荐做法',
+    sec_r1: '使用强密码（12+ 字符，包含大小写、数字、符号）。',
+    sec_r2: '随机化 subPath（避免 sub 或 link）。',
+    sec_r3: '如可能，为 /admin 启用 Cloudflare Access。',
+    sec_r4: '每隔几个月轮换管理员密码。',
+    sec_r5: '定期进行 JSON 备份。',
+    faq_title: '常见问题',
+    faq_desc: '最常见问题的答案。',
+    faq_q1: '我需要 VPS 或托管吗？',
+    faq_a1: '不需要！SAZ Bridge 完全运行在 Cloudflare Workers 上，有慷慨的免费套餐。',
+    faq_q2: '免费套餐限制是多少？',
+    faq_a2: 'Workers：每天 100,000 次请求。KV：每天 100,000 次读取 + 1,000 次写入。',
+    faq_q3: '用户如何连接到 Telegram 机器人？',
+    faq_a3: '从 @userinfobot 获取每个用户的 Chat ID 并在面板中输入。',
+    faq_q4: '支持 Clash / Mihomo 吗？',
+    faq_a4: '支持。SAZ Bridge 通过 User-Agent 检测 Clash/Mihomo 并返回 YAML 内容类型。',
+    faq_q5: '如何备份数据？',
+    faq_a5: '面板 → Start Menu → Backup → Export JSON。',
+    faq_q6: '可以使用自定义域名吗？',
+    faq_a6: '可以。Cloudflare Dashboard → Worker → Settings → Domains & Routes。',
+    faq_q7: '支持哪些代理协议？',
+    faq_a7: 'VMess、VLESS、Trojan、Shadowsocks、SSR、Hysteria、Hysteria2、TUIC、SOCKS、WireGuard。',
+    faq_q8: '我的数据安全吗？',
+    faq_a8: '是的。数据仅存在于您自己的 Cloudflare KV 命名空间中。密码使用 SHA-256 哈希。',
+    faq_q9: '我可以添加更多语言吗？',
+    faq_a9: '可以 —— 参见 docs/LANGUAGES.md 中的 i18n 指南。',
+    faq_q10: '如何更新 SAZ Bridge？',
+    faq_a10: 'git pull origin main 然后 wrangler deploy。KV 中的数据保持不变。',
+    tr_title: '常见问题',
+    tr_desc: '用户经常遇到的问题的解决方案。',
+    tr_q1: '白屏或空白页面',
+    tr_a1: '原因：JavaScript 错误或缺少 KV 绑定。修复：打开 F12 控制台，检查 SUB_KV 绑定。',
+    tr_q2: '订阅返回空内容',
+    tr_a2: '原因：没有有效的代理链接。修复：编辑用户并至少添加一个有效链接。',
+    tr_q3: 'Telegram 机器人不响应',
+    tr_a3: '原因：未设置 Webhook。修复：Bot 选项卡 → 粘贴令牌 → Connect Bot。',
+    tr_q4: '超出 KV 写入限制',
+    tr_a4: '原因：免费套餐每天仅 1,000 次写入。修复：降低频率或升级。',
+    tr_q5: '无法登录 — 密码错误',
+    tr_a5: '修复：从 KV 中删除 config 键。重新加载 —— 出现设置向导。',
+    tr_q6: '客户端显示"不支持"错误',
+    tr_a6: '原因：客户端无法解析某些链接。修复：验证链接格式。',
+    con_title: '加入项目',
+    con_desc: '欢迎各种形式的贡献 —— 代码、文档、翻译、错误报告。',
+    con_flow: '贡献流程',
+    con_step_1: 'Fork 仓库',
+    con_step_1_d: '点击 GitHub 上的 Fork 按钮并克隆您的 fork。',
+    con_step_2: '创建分支',
+    con_step_3: '提交更改',
+    con_step_4: 'Push 并打开 PR',
+    con_ideas: '贡献想法',
+    con_i1: '向 I18N 对象添加新语言。',
+    con_i2: '改进 UI 可访问性。',
+    con_i3: '添加新的客户端预设。',
+    con_i4: '为 API 端点编写测试。',
+    con_i5: '改进文档。',
+    con_i6: '添加对 Clash YAML 格式的导出。',
+    lic_title: 'MIT 许可证',
+    lic_p1: 'SAZ Bridge 在宽松的 MIT 许可证下发布。您可以将其用于商业目的、修改和分发。',
+    foot_desc: 'Cloudflare Worker 订阅管理器。快速、免费、美观。',
+    foot_issues: '报告问题',
+    foot_deploy: '部署指南',
+    foot_credit: '用心制作 ❤️ 由'
+  }
+};
+
+// ═══════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════
+const LANGS = {
+  fa: { flag: '🇮🇷', name: 'فارسی', dir: 'rtl' },
+  en: { flag: '🇬🇧', name: 'English', dir: 'ltr' },
+  ru: { flag: '🇷🇺', name: 'Русский', dir: 'ltr' },
+  zh: { flag: '🇨🇳', name: '中文', dir: 'ltr' }
+};
+
+let currentLang = 'fa';
+
+// ═══════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Detect initial language
+  const urlLang = new URLSearchParams(location.search).get('lang');
+  const cookieLang = document.cookie.match(/lang=(\w+)/);
+  const browserLang = (navigator.language || 'fa').slice(0, 2);
+  const saved = urlLang || (cookieLang && cookieLang[1]) || browserLang;
+  currentLang = LANGS[saved] ? saved : 'fa';
+
+  applyLanguage(currentLang);
+  initInteractions();
+  initScrollSpy();
+  initRevealAnimations();
+  initAccordions();
+  initTabs();
+  initCopyButtons();
+});
+
+// ═══════════════════════════════════════
+//  LANGUAGE APPLY
+// ═══════════════════════════════════════
+function applyLanguage(lang) {
+  const dict = I18N[lang];
+  if (!dict) return;
+
+  document.documentElement.lang = lang;
+  document.documentElement.dir = LANGS[lang].dir;
+  document.body.dir = LANGS[lang].dir;
+
+  // Update all data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) {
+      el.textContent = dict[key];
+    }
+  });
+
+  // Update lang switcher
+  document.getElementById('curLangFlag').textContent = LANGS[lang].flag;
+  document.getElementById('curLangName').textContent = LANGS[lang].name;
+
+  document.querySelectorAll('.lang-menu button').forEach(b => {
+    b.classList.toggle('active', b.dataset.lang === lang);
+  });
+
+  // Save preference
+  document.cookie = `lang=${lang};path=/;max-age=31536000;SameSite=Lax`;
+
+  // Re-highlight current section
+  updateActiveNavLink();
+}
+
+// ═══════════════════════════════════════
+//  LANGUAGE SWITCHER
+// ═══════════════════════════════════════
+function initLanguageSwitcher() {
+  const btn = document.getElementById('langBtn');
+  const menu = document.getElementById('langMenu');
+
+  btn.addEventListener('click', e => {
+    e.stopPropagation();
+    menu.classList.toggle('open');
+  });
+
+  menu.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => {
+      currentLang = b.dataset.lang;
+      applyLanguage(currentLang);
+      menu.classList.remove('open');
+    });
+  });
+
+  document.addEventListener('click', e => {
+    if (!menu.contains(e.target) && e.target !== btn) {
+      menu.classList.remove('open');
+    }
+  });
+}
+
+// ═══════════════════════════════════════
+//  INTERACTIONS
+// ═══════════════════════════════════════
+function initInteractions() {
+  initLanguageSwitcher();
+  initMobileMenu();
+  initBackTop();
+  initProgressBar();
+  initSmoothScroll();
+}
+
+function initMobileMenu() {
+  const toggle = document.getElementById('menuToggle');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  if (!toggle) return;
+
+  const close = () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('show');
+  };
+
+  toggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+  });
+
+  overlay.addEventListener('click', close);
+
+  // Close on link click (mobile)
+  sidebar.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      if (window.innerWidth <= 1024) close();
+    });
+  });
+}
+
+function initBackTop() {
+  const btn = document.getElementById('backTop');
+  if (!btn) return;
+
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('show', window.scrollY > 400);
+  });
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+}
+
+function initProgressBar() {
+  const bar = document.getElementById('progress');
+  if (!bar) return;
+
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    bar.style.width = pct + '%';
+  }, { passive: true });
+}
+
+function initSmoothScroll() {
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href === '#') return;
+      const target = document.querySelector(href);
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+}
+
+// ═══════════════════════════════════════
+//  SCROLL SPY
+// ═══════════════════════════════════════
+function initScrollSpy() {
+  const sections = document.querySelectorAll('.section[id]');
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        sidebarLinks.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+        });
+        navLinks.forEach(l => {
+          l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, {
+    rootMargin: '-20% 0px -70% 0px',
+    threshold: 0
+  });
+
+  sections.forEach(s => observer.observe(s));
+}
+
+function updateActiveNavLink() {
+  // Called on language change — the content doesn't change IDs, so nothing needed
+}
+
+// ═══════════════════════════════════════
+//  REVEAL ANIMATIONS
+// ═══════════════════════════════════════
+function initRevealAnimations() {
+  const els = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+
+  els.forEach(el => observer.observe(el));
+}
+
+// ═══════════════════════════════════════
+//  ACCORDIONS
+// ═══════════════════════════════════════
+function initAccordions() {
+  document.querySelectorAll('.accordion').forEach(acc => {
+    acc.querySelectorAll('.acc-head').forEach(head => {
+      head.addEventListener('click', () => {
+        const item = head.closest('.acc-item');
+        const isOpen = item.classList.contains('open');
+
+        // Optionally close others in the same accordion
+        if (acc.dataset.exclusive === 'true') {
+          acc.querySelectorAll('.acc-item').forEach(i => i.classList.remove('open'));
+        }
+
+        item.classList.toggle('open', !isOpen);
+      });
+    });
+  });
+}
+
+// ═══════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════
+function initTabs() {
+  document.querySelectorAll('.tabs').forEach(tabsEl => {
+    const buttons = tabsEl.querySelectorAll('.tab-btn');
+    const parent = tabsEl.parentElement;
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.tab;
+
+        buttons.forEach(b => b.classList.toggle('active', b === btn));
+
+        parent.querySelectorAll('.tab-pane').forEach(pane => {
+          pane.classList.toggle('active', pane.dataset.pane === target);
+        });
+      });
+    });
+  });
+}
+
+// ═══════════════════════════════════════
+//  COPY BUTTONS
+// ═══════════════════════════════════════
+function initCopyButtons() {
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const pre = btn.parentElement.querySelector('pre');
+      const code = pre.querySelector('code');
+      const text = code.textContent;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        const old = btn.textContent;
+        btn.textContent = '✓ Copied';
+        setTimeout(() => btn.textContent = old, 1500);
+      } catch {
+        // Fallback
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        btn.textContent = '✓ Copied';
+        setTimeout(() => btn.textContent = '📋', 1500);
+      }
+    });
+  });
+}
+
+// ═══════════════════════════════════════
+//  KEYBOARD
+// ═══════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.getElementById('langMenu')?.classList.remove('open');
+    document.getElementById('sidebar')?.classList.remove('open');
+    document.getElementById('overlay')?.classList.remove('show');
+  }
+});
+
+console.log('%c🌉 SAZ Bridge Docs v0.0.7', 'color:#3A93FF;font-size:16px;font-weight:bold');
+console.log('%cDocumentation by THE SAZ · https://github.com/THE-SAZ', 'color:#7FBA00');
+</script>
+
+</body>
+</html>

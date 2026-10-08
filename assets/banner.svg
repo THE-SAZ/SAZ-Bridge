@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
+  <defs>
+    <linearGradient id="desktop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5A8DCA"/>
+      <stop offset="50%" stop-color="#3A6EA5"/>
+      <stop offset="100%" stop-color="#20528C"/>
+    </linearGradient>
+    <linearGradient id="taskbar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3A93FF"/>
+      <stop offset="8%" stop-color="#0054E3"/>
+      <stop offset="90%" stop-color="#0040B0"/>
+      <stop offset="100%" stop-color="#003075"/>
+    </linearGradient>
+    <linearGradient id="startBtn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8FCC42"/>
+      <stop offset="45%" stop-color="#5CA300"/>
+      <stop offset="50%" stop-color="#488B00"/>
+      <stop offset="100%" stop-color="#7FBA00"/>
+    </linearGradient>
+    <linearGradient id="winFrame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0058E6"/>
+      <stop offset="8%" stop-color="#3A93FF"/>
+      <stop offset="40%" stop-color="#0054E3"/>
+      <stop offset="90%" stop-color="#003DB8"/>
+    </linearGradient>
+    <linearGradient id="gloss" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.6"/>
+      <stop offset="50%" stop-color="#fff" stop-opacity="0.05"/>
+      <stop offset="51%" stop-color="#fff" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0.15"/>
+    </linearGradient>
+    <filter id="dropShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+      <feOffset dx="0" dy="6" result="off"/>
+      <feMerge><feMergeNode in="off"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Desktop background -->
+  <rect width="1200" height="400" fill="url(#desktop)"/>
+
+  <!-- Bliss-like hills -->
+  <ellipse cx="200" cy="450" rx="500" ry="180" fill="#6BA83B" opacity="0.55"/>
+  <ellipse cx="900" cy="480" rx="600" ry="200" fill="#8AC04A" opacity="0.45"/>
+  <ellipse cx="600" cy="500" rx="800" ry="220" fill="#4D8B25" opacity="0.5"/>
+
+  <!-- Clouds -->
+  <g fill="#fff" opacity="0.7">
+    <ellipse cx="180" cy="90" rx="60" ry="20"/>
+    <ellipse cx="220" cy="85" rx="45" ry="22"/>
+    <ellipse cx="140" cy="95" rx="35" ry="15"/>
+    <ellipse cx="980" cy="70" rx="70" ry="22"/>
+    <ellipse cx="1030" cy="65" rx="50" ry="24"/>
+    <ellipse cx="930" cy="75" rx="40" ry="16"/>
+  </g>
+
+  <!-- Main window -->
+  <g filter="url(#dropShadow)">
+    <rect x="90" y="90" width="1020" height="240" rx="10" fill="url(#winFrame)"/>
+    <rect x="90" y="90" width="1020" height="34" fill="url(#gloss)" rx="10"/>
+  </g>
+  <rect x="91" y="121" width="1018" height="208" fill="#ECE9D8"/>
+
+  <!-- Title bar -->
+  <circle cx="110" cy="107" r="6" fill="#7FBA00" stroke="#fff" stroke-width="1.5"/>
+  <text x="124" y="112" font-family="Tahoma, sans-serif" font-size="14" font-weight="bold" fill="#fff">SAZ Bridge — Subscription Manager</text>
+
+  <!-- Window buttons -->
+  <rect x="1055" y="100" width="22" height="16" rx="3" fill="#C33" stroke="#fff" stroke-opacity="0.5"/>
+  <line x1="1060" y1="105" x2="1072" y2="112" stroke="#fff" stroke-width="2"/>
+  <line x1="1072" y1="105" x2="1060" y2="112" stroke="#fff" stroke-width="2"/>
+  <rect x="1030" y="100" width="22" height="16" rx="3" fill="url(#winFrame)" stroke="#fff" stroke-opacity="0.5"/>
+  <rect x="1035" y="104" width="12" height="9" fill="none" stroke="#fff" stroke-width="1.5"/>
+  <rect x="1005" y="100" width="22" height="16" rx="3" fill="url(#winFrame)" stroke="#fff" stroke-opacity="0.5"/>
+  <line x1="1010" y1="111" x2="1022" y2="111" stroke="#fff" stroke-width="2"/>
+
+  <!-- Menu bar -->
+  <rect x="91" y="121" width="1018" height="22" fill="#ECE9D8" stroke="#ACA899" stroke-width="1"/>
+  <text x="105" y="136" font-family="Tahoma, sans-serif" font-size="12" fill="#000">File</text>
+  <text x="145" y="136" font-family="Tahoma, sans-serif" font-size="12" fill="#000">Edit</text>
+  <text x="185" y="136" font-family="Tahoma, sans-serif" font-size="12" fill="#000">View</text>
+  <text x="235" y="136" font-family="Tahoma, sans-serif" font-size="12" fill="#000">Tools</text>
+  <text x="290" y="136" font-family="Tahoma, sans-serif" font-size="12" fill="#000">Help</text>
+
+  <!-- Content: Logo icon -->
+  <g transform="translate(130, 170)">
+    <rect width="120" height="120" rx="10" fill="url(#winFrame)"/>
+    <rect width="120" height="22" fill="url(#gloss)" rx="10"/>
+    <circle cx="12" cy="11" r="4" fill="#7FBA00"/>
+    <text x="22" y="15" font-family="Tahoma, sans-serif" font-size="9" font-weight="bold" fill="#fff">SAZ Bridge</text>
+    <rect x="0" y="22" width="120" height="98" fill="#ECE9D8"/>
+    <g fill="none" stroke="#0054E3" stroke-linecap="round" stroke-width="5">
+      <path d="M20 90 Q60 40 100 90"/>
+      <path d="M14 100 L106 100"/>
+      <line x1="40" y1="68" x2="40" y2="100" stroke-width="3"/>
+      <line x1="60" y1="40" x2="60" y2="100" stroke-width="3"/>
+      <line x1="80" y1="68" x2="80" y2="100" stroke-width="3"/>
+    </g>
+    <circle cx="60" cy="40" r="5" fill="#7FBA00" stroke="#fff" stroke-width="2"/>
+  </g>
+
+  <!-- Right: text -->
+  <g transform="translate(280, 150)" font-family="Tahoma, sans-serif">
+    <text x="0" y="50" font-size="52" font-weight="900" fill="#003C74">SAZ Bridge</text>
+    <text x="0" y="50" font-size="52" font-weight="900" fill="url(#winFrame)" opacity="0.9">SAZ Bridge</text>
+    <text x="0" y="82" font-size="16" font-weight="700" fill="#0054E3" letter-spacing="4">CLOUDFLARE SUBSCRIPTION MANAGER</text>
+    <text x="0" y="115" font-size="14" fill="#444">
+      ✦ Sub Manager  ✦ User Control  ✦ Telegram Bot  ✦ Multi-Language
+    </text>
+    <rect x="0" y="130" width="620" height="1" fill="#ACA899"/>
+    <text x="0" y="155" font-size="13" fill="#666">
+      Developed by
+      <tspan fill="#0054E3" font-weight="700">THE SAZ</tspan>
+      <tspan fill="#888">  ·  v0.0.7  ·  Windows XP Edition</tspan>
+    </text>
+  </g>
+
+  <!-- Taskbar -->
+  <rect x="0" y="355" width="1200" height="45" fill="url(#taskbar)"/>
+  <rect x="0" y="355" width="1200" height="6" fill="#fff" opacity="0.15"/>
+
+  <!-- Start button -->
+  <g transform="translate(6, 360)">
+    <rect width="120" height="34" rx="8" fill="url(#startBtn)" stroke="#3A6B00"/>
+    <rect width="120" height="14" rx="8" fill="#fff" opacity="0.25"/>
+    <text x="42" y="23" font-family="Tahoma, sans-serif" font-size="15" font-weight="bold" fill="#fff" font-style="italic">start</text>
+  </g>
+
+  <!-- System tray -->
+  <rect x="1080" y="360" width="114" height="34" fill="url(#taskbar)"/>
+  <rect x="1080" y="360" width="114" height="34" fill="#000" opacity="0.1"/>
+  <text x="1095" y="383" font-family="Tahoma, sans-serif" font-size="12" fill="#fff">12:34</text>
+  <circle cx="1170" cy="377" r="6" fill="#7FBA00" opacity="0.7"/>
+</svg>

@@ -1,0 +1,16 @@
+name = "saz-bridge"
+main = "_worker.js"
+compatibility_date = "2024-11-01"
+compatibility_flags = ["nodejs_compat"]
+
+# ── KV Binding (فقط یک Binding لازم است) ──
+# همه چیز از طریق Setup Wizard در پنل ذخیره می‌شود
+[[kv_namespaces]]
+binding = "SUB_KV"
+id = "REPLACE_WITH_YOUR_KV_ID"
+preview_id = "REPLACE_WITH_YOUR_KV_PREVIEW_ID"
+
+# ── Environment Variables (اختیاری — همه در پنل قابل تنظیم هستند) ──
+[vars]
+# مسیر پیش‌فرض ساب‌لینک (قابل تغییر در پنل)
+SUB_PATH = "sub"

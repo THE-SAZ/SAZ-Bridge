@@ -1,0 +1,36 @@
+{
+  "name": "saz-bridge",
+  "version": "0.0.7",
+  "description": "SAZ Bridge 🌉 — Cloudflare Worker Subscription Manager with Windows XP theme",
+  "main": "_worker.js",
+  "type": "module",
+  "author": "THE SAZ <https://github.com/THE-SAZ>",
+  "license": "MIT",
+  "homepage": "https://github.com/THE-SAZ/saz-bridge",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/THE-SAZ/saz-bridge.git"
+  },
+  "bugs": {
+    "url": "https://github.com/THE-SAZ/saz-bridge/issues"
+  },
+  "keywords": [
+    "cloudflare-worker",
+    "subscription",
+    "v2ray",
+    "vmess",
+    "vless",
+    "trojan",
+    "sublink",
+    "telegram-bot",
+    "windows-xp"
+  ],
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "wrangler": "^3.80.0"
+  }
+}
